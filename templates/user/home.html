@@ -5,8 +5,15 @@
 {% endblock %}
 
 {% block content %}
-<center>
-Here are where the items are
-</center>
+  <div>
+    <form method='post'>
+      <label for="topic">Add a New Topic: </label>
+      <input name="topic" id="topic" required>
+      <input type="submit" value="Submit">
+  </div>
+  <p>
+  <center>
+    Here are where the items are
+  </center>
 <a href="{{ url_for('user.addbill') }}">Add New Bill</a>
 {% endblock %}

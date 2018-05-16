@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS billdesc;
+DROP TABLE IF EXISTS topic;
 DROP TABLE IF EXISTS bills;
 
 CREATE TABLE user (
@@ -8,14 +8,14 @@ CREATE TABLE user (
   password TEXT NOT NULL
 );
 
-CREATE TABLE billdesc (
+CREATE TABLE topics (
   userid INTEGER NOT NULL,
-  desc TEXT NOT NULL
+  topic TEXT NOT NULL
 );
 
 CREATE TABLE bills (
   userid INTEGER NOT NULL,
-  desc TEXT NOT NULL
+  topic TEXT NOT NULL
   total REAL NOT NULL,
   posted_date TEXT NOT NULL,
   due_date TEXT NOT NULL
