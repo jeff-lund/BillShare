@@ -1,0 +1,22 @@
+<!doctype html>
+<title>{% block title %}{% endblock %}BillShare</title>
+{% if g.user %}
+<h1> <a href="{{ url_for('user.home') }}"> BillShare</a></h1>
+{% else %}
+<h1> <a href="{{ url_for('index') }}"> BillShare</a></h1>
+{% endif %}
+{% if g.user %}
+<div>
+  {{ g.user['username'] }}
+  <a href="{{ url_for('auth.logout') }}">Log Out</a>
+</div>
+{% endif %}
+<section class="content">
+  <header>
+    {% block header %}{% endblock %}
+  </header>
+  {% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+  {% block content %}{% endblock %}
+</section>

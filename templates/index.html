@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+<center>
+<h2>Welcome to BillShare</h2>
+<nav>
+  <ul>
+    <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+    <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
+  </ul>
+</nav>
+</center>
+{% endblock %}

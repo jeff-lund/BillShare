@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h2>{% block title %}Home{% endblock %} </h2>
+{% endblock %}
+
+{% block content %}
+<center>
+Here are where the items are
+</center>
+<a href="{{ url_for('user.addbill') }}">Add New Bill</a>
+{% endblock %}
