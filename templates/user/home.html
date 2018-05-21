@@ -5,15 +5,19 @@
 {% endblock %}
 
 {% block content %}
-  <div>
-    <form method='post'>
-      <label for="topic">Add a New Topic: </label>
-      <input name="topic" id="topic" required>
-      <input type="submit" value="Submit">
-  </div>
-  <p>
-  <center>
-    Here are where the items are
-  </center>
+  {% for category in categories %}
+    <article class="category">
+      <header>
+          <h1>{{ category['category'] }}</h1>
+      </header>
+          <div class="bill">
+            {% for entry in bills[category] %}
+              <p>
+              {{ entry[0] }}|{{ entry[1] }}|{{ entry[2] }}| {{ entry[3] }}
+            {% endfor %}
+            <p>
+          </div>    
+    </article>
+    {% endfor %}
 <a href="{{ url_for('user.addbill') }}">Add New Bill</a>
 {% endblock %}

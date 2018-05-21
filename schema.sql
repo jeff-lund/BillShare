@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS topic;
 DROP TABLE IF EXISTS bills;
+DROP TABLE IF EXISTS topics;
 
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -9,14 +9,19 @@ CREATE TABLE user (
 );
 
 CREATE TABLE topics (
-  userid INTEGER NOT NULL,
-  topic TEXT NOT NULL
-);
+  id INTEGER PRIMARY KEY;
+  topic TEXT NOT NULL;
+  FOREIGN KEY (id) REFERENCES user (id)
+    ON DELETE SET NULL
+   );
 
 CREATE TABLE bills (
-  userid INTEGER NOT NULL,
-  topic TEXT NOT NULL
+  id INTEGER PRIMARY KEY,
+  topic TEXT NOT NULL,
+  name TEXT NOT NULL.
   total REAL NOT NULL,
   posted_date TEXT NOT NULL,
-  due_date TEXT NOT NULL
+  due_date TEXT NOT NULL,
+  FOREIGN KEY (id) REFERENCES user (id),
+  FOREIGN KEY (topic) REFERENCES topics (topic) 
 );

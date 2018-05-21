@@ -9,20 +9,21 @@ bp = Blueprint('user', __name__, url_prefix = '/user')
 @bp.route('/home', methods=('GET', 'POST'))
 @login_required
 def home():
-    if(method == 'POST'):
-        topic = request.form['topic']
-        db = get_db()
-        error = None
-        if not topic:
-            error = 'Please enter a name for a new topic'
-        elif # check to make sure topic does not already exists
+    db = get_db()
+    bills = {}
+    categories = db.execute('SELECT topic FROM bills WHERE id = ?', (g.user['id'],)).fetchall()
+    for c in categories:
+        bills[c] = db.execute('SELECT name, total, posted_date, due_date FROM bills WHERE id = ?, topic = ?', (g.user['id'], c,)).fetchall()
 
-        # insert new entry into topic db
     return render_template('user/home.html')
 # add item
 @bp.route('/addbill', methods=('GET', 'POST'))
 @login_required
 def addbill():
+    if(request.method == 'POST'):
+        topic = request.form['topic']
+        name = 
+
     return render_template('user/addbill.html')
 
 # view item
