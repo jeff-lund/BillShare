@@ -5,19 +5,22 @@
 {% endblock %}
 
 {% block content %}
-  {% for category in categories %}
+<a href="{{ url_for('user.addtopic') }}">New Category</a><p>
+<p>
+  {% for c in cat %}
     <article class="category">
       <header>
-          <h1>{{ category['category'] }}</h1>
+        <h1>{{ c.topic }}</h1>
       </header>
-          <div class="bill">
-            {% for entry in bills[category] %}
-              <p>
-              {{ entry[0] }}|{{ entry[1] }}|{{ entry[2] }}| {{ entry[3] }}
-            {% endfor %}
-            <p>
-          </div>    
+				<div class="bill">
+				<p>
+				{% for b in bills %}
+					{% if b.topic == c.topic %}	
+						Total Due: {{ b.total }} | Posted: {{ b.posted_date }} | Due: {{ b.due_date }}<p>
+					{% endif %}
+				{% endfor %}
+			 	<a href="{{ url_for('user.addbill', top=c.topic) }}">Add New Bill</a>
+      	</div>     
     </article>
     {% endfor %}
-<a href="{{ url_for('user.addbill') }}">Add New Bill</a>
 {% endblock %}

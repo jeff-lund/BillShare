@@ -26,7 +26,7 @@ def register():
                 (username, generate_password_hash(password))
             )
             db.commit()
-            return redirect(url_for('.login'))
+            return redirect(url_for('auth.login'))
 
         flash(error)
 
@@ -72,7 +72,7 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(*args, **kwargs):
         if g.user is None:
-            return redirect(url_for('login'))
+            return redirect(url_for('auth.login'))
         return view(*args, **kwargs)
     return wrapped_view
 

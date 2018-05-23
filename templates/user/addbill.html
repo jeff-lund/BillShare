@@ -1,12 +1,17 @@
 {% extends 'base.html' %}
 
 {% block header %}{% endblock %}
-
+<p>
+<p>
 {% block content %}
-<ul>
-  <li>Name</li>
-  <li>Amount</li>
-  <li>Date Poster</li>
-  <li>Due Date</li>
-</ul>
+<form method="post">
+  <label for="total">Total Due</label>
+  <input name="total" id="total" required>
+	<label for="posted">Date Posted</label>
+	<input name="posted" id="posted">
+	<label for="due">Due Date</label>
+  <input name="due" id="due" required>
+  <input type="submit" value="Submit">
+	<p>
+  <a href="{{ url_for('user.home') }}">Cancel</a>
 {% endblock %}

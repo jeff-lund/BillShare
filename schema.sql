@@ -9,19 +9,19 @@ CREATE TABLE user (
 );
 
 CREATE TABLE topics (
-  id INTEGER PRIMARY KEY;
-  topic TEXT NOT NULL;
+  id INTEGER,
+  topic TEXT NOT NULL,
   FOREIGN KEY (id) REFERENCES user (id)
-    ON DELETE SET NULL
-   );
+);
 
 CREATE TABLE bills (
-  id INTEGER PRIMARY KEY,
+  id INTEGER NOT NULL,
+  bill_id INTEGER PRIMARY KEY AUTOINCREMENT,
   topic TEXT NOT NULL,
-  name TEXT NOT NULL.
   total REAL NOT NULL,
-  posted_date TEXT NOT NULL,
+  posted_date TEXT,
   due_date TEXT NOT NULL,
+  paid INTEGER NOT NULL,
   FOREIGN KEY (id) REFERENCES user (id),
   FOREIGN KEY (topic) REFERENCES topics (topic) 
 );

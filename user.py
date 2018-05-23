@@ -10,19 +10,48 @@ bp = Blueprint('user', __name__, url_prefix = '/user')
 @login_required
 def home():
     db = get_db()
-    bills = {}
-    categories = db.execute('SELECT topic FROM bills WHERE id = ?', (g.user['id'],)).fetchall()
-    for c in categories:
-        bills[c] = db.execute('SELECT name, total, posted_date, due_date FROM bills WHERE id = ?, topic = ?', (g.user['id'], c,)).fetchall()
+    cat = db.execute('SELECT topic FROM topics WHERE id = ?', (g.user['id'],)).fetchall()
+    bills = db.execute('SELECT total, posted_date, due_date, topic FROM bills WHERE id = ?', (g.user['id'],)).fetchall()
 
-    return render_template('user/home.html')
-# add item
-@bp.route('/addbill', methods=('GET', 'POST'))
+    return render_template('user/home.html', cat=cat, bills=bills)
+
+#add topic
+@bp.route('/addtopic', methods=('GET', 'POST'))
 @login_required
-def addbill():
+def addtopic():
     if(request.method == 'POST'):
-        topic = request.form['topic']
-        name = 
+        db = get_db()
+        error = None
+        category = request.form['topic']
+        if not category:
+            error = "Please enter a new category"
+        if db.execute('SELECT topic FROM topics WHERE id = ? AND topic = ?', (g.user['id'], category,)).fetchone() is not None:
+            error = "Category already exists"
+        
+        if error is None:
+            db.execute( 'INSERT INTO topics (id, topic) VALUES (?, ?)', (g.user['id'], category))
+            db.commit()
+            return redirect(url_for('.home'))
+
+        flash(error)
+
+    return render_template('user/addtopic.html')
+
+
+# add item
+@bp.route('/addbill/<top>', methods=('GET', 'POST'))
+@login_required
+def addbill(top):
+    if(request.method == 'POST'):
+        db = get_db()
+        error = None
+        total = float(request.form['total'])
+        due = request.form['due']
+        posted = request.form['posted']
+
+        db.execute('INSERT INTO bills (id, topic, total, posted_date, due_date, paid) VALUES ( ?, ?, ?, ?, ?, 0)', (g.user['id'], top, total, posted, due,))
+        db.commit()
+        return redirect(url_for('.home'))
 
     return render_template('user/addbill.html')
 
