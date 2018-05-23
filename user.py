@@ -11,8 +11,12 @@ bp = Blueprint('user', __name__, url_prefix = '/user')
 def home():
     db = get_db()
     cat = db.execute('SELECT topic FROM topics WHERE id = ?', (g.user['id'],)).fetchall()
-    bills = db.execute('SELECT total, posted_date, due_date, topic FROM bills WHERE id = ?', (g.user['id'],)).fetchall()
-
+    bills = db.execute('SELECT total, posted_date, due_date, topic, bill_id FROM bills WHERE id = ? AND paid = 0', (g.user['id'],)).fetchall()
+    if(request.method == 'POST'):
+        del_id = request.form['paid']
+        db.execute('UPDATE bills SET paid = 1 WHERE bill_id = ?', (del_id))
+        db.commit()
+        return render_template('user/home.html', cat=cat, bills=bills)
     return render_template('user/home.html', cat=cat, bills=bills)
 
 #add topic

@@ -16,7 +16,11 @@
 				<p>
 				{% for b in bills %}
 					{% if b.topic == c.topic %}	
-						Total Due: {{ b.total }} | Posted: {{ b.posted_date }} | Due: {{ b.due_date }}<p>
+						Total Due: {{ b.total }} | Posted: {{ b.posted_date }} | Due: {{ b.due_date }}
+            <form method="post">
+              <button type="submit" name="paid" value="{{ b.bill_id }}">Paid</button>
+            </form>
+            <p>
 					{% endif %}
 				{% endfor %}
 			 	<a href="{{ url_for('user.addbill', top=c.topic) }}">Add New Bill</a>
