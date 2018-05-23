@@ -19,9 +19,12 @@ def create_app():
     except OSError:
         pass
 
-    @app.route('/', methods=('GET', 'POST'))
-    def index():
-        return flask.render_template('index.html')
+    #@app.route('/', methods=('GET', 'POST'))
+    #def index():
+    #    if flask.g.user:
+    #        return home()
+
+     #   return flask.render_template('index.html')
 
     from . import db
     db.init_app(app)
@@ -31,5 +34,13 @@ def create_app():
 
     from . import user
     app.register_blueprint(user.bp)
+
+    @app.route('/', methods=('GET', 'POST'))
+    def index():
+        if flask.g.user:
+            return user.home()
+
+        return flask.render_template('index.html')
+
 
     return app
