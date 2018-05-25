@@ -4,7 +4,8 @@
 # Main application code that runs the website
 
 import os
-import flask, flask.views
+import flask
+
 
 def create_app():
     app = flask.Flask(__name__, instance_relative_config=True)
@@ -19,13 +20,6 @@ def create_app():
     except OSError:
         pass
 
-    #@app.route('/', methods=('GET', 'POST'))
-    #def index():
-    #    if flask.g.user:
-    #        return home()
-
-     #   return flask.render_template('index.html')
-
     from . import db
     db.init_app(app)
 
@@ -38,7 +32,7 @@ def create_app():
     @app.route('/', methods=('GET', 'POST'))
     def index():
         if flask.g.user:
-            return user.home()
+            return flask.redirect(flask.url_for('user.home', username = flask.g.user['username']))
 
         return flask.render_template('index.html')
 

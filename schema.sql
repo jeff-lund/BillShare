@@ -22,6 +22,7 @@ CREATE TABLE bills (
   posted_date TEXT,
   due_date TEXT NOT NULL,
   paid INTEGER NOT NULL,
+  past_due INTEGER NOT NULL,
   FOREIGN KEY (id) REFERENCES user (id),
-  FOREIGN KEY (topic) REFERENCES topics (topic) 
+  FOREIGN KEY (topic) REFERENCES topics (topic)
 );

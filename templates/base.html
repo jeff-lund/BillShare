@@ -1,12 +1,25 @@
 <!doctype html>
-<title>{% block title %}{% endblock %} - BillShare</title>
-<h1> <a href="{{ url_for('index') }}"> BillShare</a></h1>
-{% if g.user %}
-<div>
-  {{ g.user['username'] }}
-  <a href="{{ url_for('auth.logout') }}">Log Out</a>
-</div>
-{% endif %}
+<head>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-flat.css">
+<link rel="stylesheet" type="text/css" href="/static/style.css">
+<title>
+  {% block title %}{% endblock %} - BillShare
+</title>
+</head>
+    <div class="w3-container w3-flat-silver w3-round-large">
+      <div class="w3-left w3-xxlarge w3-text-green">
+        <a class="" href="{{ url_for('index') }}">BillShare</a>
+      </div>
+      <div class="w3-right">
+        {% if g.user %}
+          {{ g.user['username'] }}
+          <a href="{{ url_for('auth.logout') }}">Log Out</a>
+        {% else %}
+          <a href="{{ url_for('auth.login') }}">Log In</a>
+        {% endif %}
+      </div>
+    </div>
 <section class="content">
   <header>
     {% block header %}{% endblock %}

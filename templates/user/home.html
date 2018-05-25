@@ -5,26 +5,44 @@
 {% endblock %}
 
 {% block content %}
-<a href="{{ url_for('user.addtopic') }}">New Category</a><p>
+<a href="{{ url_for('user.addtopic', username=g.user['username']) }}">
+  New Category
+</a>
+<p>
 <p>
   {% for c in cat %}
+  <div class="w3-container">
     <article class="category">
-      <header>
-        <h1>{{ c.topic }}</h1>
-      </header>
-				<div class="bill">
-				<p>
+        <h2>{{ c.topic }}</h2>
+				<div class="bill w3-card-4">
+          <table class="w3-table w3-bordered">
 				{% for b in bills %}
-					{% if b.topic == c.topic %}	
-						Total Due: {{ b.total }} | Posted: {{ b.posted_date }} | Due: {{ b.due_date }}
-            <form method="post">
-              <button type="submit" name="paid" value="{{ b.bill_id }}">Paid</button>
+					{% if b.topic == c.topic %}
+            {% if b.past_due == 0 %}
+						  <tr class="w3-light-green">
+            {% else %}
+              <tr class="w3-red">
+            {% endif %}
+              <th>Total Due: {{ b.total }}</th>
+              <th>Posted: {{ b.posted_date }}</th>
+              <th>Due: {{ b.due_date }}</th>
+            <th>
+              <form method="post">
+              <button class="w3-button w3-border w3-border-light-green w3-round-xxlarge" type="submit" name="paid" value="{{ b.bill_id }}">
+                Paid
+              </button>
             </form>
-            <p>
+          </th>
+        </tr>
 					{% endif %}
+        </div>
 				{% endfor %}
-			 	<a href="{{ url_for('user.addbill', top=c.topic) }}">Add New Bill</a>
-      	</div>     
-    </article>
-    {% endfor %}
+      </table>
+    </div>
+    <a class="w3-small w3-text-blue" href="{{ url_for('user.addbill', top=c.topic, username=g.user['username']) }}">
+      Add New Bill
+    </a>
+  </div>
+  </article>
+  {% endfor %}
 {% endblock %}

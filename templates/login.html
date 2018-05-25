@@ -5,11 +5,31 @@
 {% endblock %}
 
 {% block content %}
-<form method="post">
-    <label for="username">Username</label>
-    <input name="username" id="username" required>
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" required>
-    <input type="submit" value="Login">
+<table class="w3-border w3-flat-concrete w3-center" style="margin: auto; width: 40%; padding: 10px;">
+  <form method="post">
+    <tr>
+      <td>
+        <label for="username">Username: </label>
+      </td>
+      <td>
+        <input name="username" placeholder="Enter Username" id="username" required>
+      </td>
+      </tr>
+    <tr>
+      <td>
+        <label for="password">Password: </label>
+      </td>
+      <td>
+        <input type="password" name="password" placeholder="Enter Password" id="password" required>
+      </td>
+    </tr>
+    <tr>
+      <td rowspan="2">
+        <button type="submit" value="login" class="w3-btn w3-round-xxlarge w3-white w3-border w3-border-green">
+          Log In
+        </button>
+      </td>
+  </tr>
   </form>
+</table>
 {% endblock %}
