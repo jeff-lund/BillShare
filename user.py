@@ -12,22 +12,17 @@ bp = Blueprint('user', __name__)
 @login_required
 def home(username):
     db = get_db()
-    date = str(datetime.date.today())
+    date = datetime.date.today()
     cat = db.execute('SELECT topic FROM topics WHERE id = ?', (g.user['id'],)).fetchall()
     bills = db.execute('SELECT total, posted_date, due_date, topic, bill_id, past_due FROM bills WHERE id = ? AND paid = 0', (g.user['id'],)).fetchall()
-
-    for b in bills:
-        if b.past_due < date:
-            db.execute('UPDATE bills SET past_due = 1 WHERE bill_id =?' (bill_id))
-            db.commit()
-
+    groups = db.execute('SELECT name FROM groups WHERE owner_id = ?', (g.user['id'],)).fetchall()
     if(request.method == 'POST'):
         del_id = request.form['paid']
         db.execute('UPDATE bills SET paid = 1 WHERE bill_id = ?', (del_id))
         db.commit()
-        return redirect('user/home.html', cat=cat, bills=bills, username = g.user['username'])
+        return redirect(url_for('.home', username = g.user['username']))
 
-    return render_template('user/home.html', cat=cat, bills=bills, username = g.user['username'])
+    return render_template('user/home.html', cat=cat, bills=bills, groups=groups, username=g.user['username'])
 
 #add topic
 @bp.route('/<username>/addtopic', methods=('GET', 'POST'))
@@ -65,10 +60,23 @@ def addbill(username,top):
         due = request.form['due']
         posted = request.form['posted']
 
-        db.execute('INSERT INTO bills (id, topic, total, posted_date, due_date, paid, past_due) VALUES ( ?, ?, ?, ?, ?, 0, 0)', (g.user['id'], top, total, posted, due,))
+        db.execute('INSERT INTO bills (id, topic, total, posted_date, due_date, paid, past_due) VALUES (?, ?, ?, ?, ?, 0, 0)', (g.user['id'], top, total, posted, due,))
         db.commit()
         return redirect(url_for('.home', username=g.user['username']))
 
     return render_template('user/addbill.html', username=g.user['username'])
 
-# view item
+# add new group
+@bp.route('/<username>/addgroup', methods=('GET', 'POST'))
+@login_required
+def addgroup(username):
+    if(request.method == 'POST'):
+        db = get_db()
+        error = None
+        name = request.form['name']
+
+        db.execute('INSERT INTO groups (owner_id, name) VALUES (?, ?)', (g.user['id'], name))
+        db.commit()
+        return redirect(url_for('.home', username=g.user['username']))
+
+    return render_template('user/addgroup.html', username=g.user['username'])

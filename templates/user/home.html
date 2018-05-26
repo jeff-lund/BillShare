@@ -5,25 +5,29 @@
 {% endblock %}
 
 {% block content %}
-<a href="{{ url_for('user.addtopic', username=g.user['username']) }}">
-  New Category
-</a>
-<p>
-<p>
+<a href=" {{url_for('user.addgroup', username=g.user['username']) }}"> Add New Group </a>
+<a href="{{ url_for('user.addtopic', username=g.user['username']) }}">New Category</a>
+<div class="tab">
+  {% for gr in groups %}
+    <button class="tablinks" onclick="openGroup(event, {{ gr.name }})"> {{gr.name }} </button>
+  {% endfor %}
+</div>
+{% for gr in group %}
+<div id="{{ gr.name }}" class="tabcontent">
   {% for c in cat %}
   <div class="w3-container">
     <article class="category">
         <h2>{{ c.topic }}</h2>
-				<div class="bill w3-card-4">
+				<div class="bill w3-card-4 w3-responsive" style="min-width: 20%; max-width: 70%;">
           <table class="w3-table w3-bordered">
 				{% for b in bills %}
 					{% if b.topic == c.topic %}
             {% if b.past_due == 0 %}
-						  <tr class="w3-light-green">
+						  <tr class="w3-pale-green">
             {% else %}
-              <tr class="w3-red">
+              <tr class="w3-pale-red">
             {% endif %}
-              <th>Total Due: {{ b.total }}</th>
+              <th>Total Due: ${{ b.total }}</th>
               <th>Posted: {{ b.posted_date }}</th>
               <th>Due: {{ b.due_date }}</th>
             <th>

@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 
 {% block header %}{% block title %}
-Topics
+Add Group
 {% endblock %}{% endblock %}
 
 {% block content %}
 <form method="post">
-  <label for="topic">New Bill Category</label>
-  <input name="topic" id="topic" required>
+  <label for="name">Group Name</label>
+  <input name="name" id="name" required>
   <input type="submit" value="Submit">
  <p>
  <a href="{{ url_for('user.home', username=g.user['username']) }}">Cancel</a>

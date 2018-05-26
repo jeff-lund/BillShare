@@ -19,11 +19,20 @@ def register():
             'SELECT id FROM user WHERE username = ?', (username,)
         ).fetchone() is not None:
             error = 'Username not available.'
-        
+
+        # sucessful generation of new user
         if error is None:
             db.execute(
-                'INSERT INTO user (username, password) VALUES (?, ?)', 
+                'INSERT INTO user (username, password) VALUES (?, ?)',
                 (username, generate_password_hash(password))
+            )
+            db.commit()
+            id = db.execute(
+                'SELECT id FROM user WHERE username =?',
+                (username,)).fetchone()
+            db.execute(
+                'INSERT INTO groups (owner_id, name) VALUES (?, ?)',
+                (id['id'], 'Default',)
             )
             db.commit()
             return redirect(url_for('auth.login'))
@@ -75,4 +84,3 @@ def login_required(view):
             return redirect(url_for('auth.login'))
         return view(*args, **kwargs)
     return wrapped_view
-
