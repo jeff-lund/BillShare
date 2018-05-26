@@ -11,22 +11,25 @@ CREATE TABLE user (
 
 CREATE TABLE topics (
   id INTEGER,
+  group_id INTEGER NOT NULL,
   topic TEXT NOT NULL,
-  FOREIGN KEY (id) REFERENCES user (id)
+  FOREIGN KEY (id) REFERENCES user (id),
+  FOREIGN KEY (group_id) REFERENCES groups (group_id)
 );
 
 CREATE TABLE bills (
   id INTEGER NOT NULL,
   bill_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  group_id INTEGER NOT NULL,
   topic TEXT NOT NULL,
   total REAL NOT NULL,
   posted_date TEXT,
   due_date TEXT NOT NULL,
   paid INTEGER NOT NULL,
   past_due INTEGER NOT NULL,
-  group_id INTEGER,
   FOREIGN KEY (id) REFERENCES user (id),
-  FOREIGN KEY (topic) REFERENCES topics (topic)
+  FOREIGN KEY (topic) REFERENCES topics (topic),
+  FOREIGN KEY (group_id) REFERENCES groups (group_id)
 );
 
 CREATE TABLE groups (

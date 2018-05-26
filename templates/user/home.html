@@ -5,48 +5,50 @@
 {% endblock %}
 
 {% block content %}
-<a href=" {{url_for('user.addgroup', username=g.user['username']) }}"> Add New Group </a>
-<a href="{{ url_for('user.addtopic', username=g.user['username']) }}">New Category</a>
 <div class="tab">
   {% for gr in groups %}
-    <button class="tablinks" onclick="openGroup(event, {{ gr.name }})"> {{gr.name }} </button>
+    {% if gr.name == 'Default' %}
+    <button class="tablinks" onclick="openGroup('{{ gr.name }}', this)" id="defaultOpen"> {{gr.name }} </button>
+    {% else %}
+    <button class="tablinks" onclick="openGroup('{{ gr.name }}', this)"> {{gr.name }} </button>
+    {% endif %}
   {% endfor %}
+  <button class="tablinks w3-right">
+    <a href=" {{url_for('user.addgroup', username=g.user['username']) }}">New Group</a>
+  </button>
 </div>
-{% for gr in group %}
+
+{% for gr in groups %}
 <div id="{{ gr.name }}" class="tabcontent">
+  <a class="w3-small w3-text-blue" href="{{ url_for('user.addtopic', username=g.user['username'], group_id=gr.group_id) }}"> Add New Category To {{ gr.name }}</a>
+  <br>
   {% for c in cat %}
-  <div class="w3-container">
-    <article class="category">
-        <h2>{{ c.topic }}</h2>
-				<div class="bill w3-card-4 w3-responsive" style="min-width: 20%; max-width: 70%;">
-          <table class="w3-table w3-bordered">
-				{% for b in bills %}
-					{% if b.topic == c.topic %}
-            {% if b.past_due == 0 %}
-						  <tr class="w3-pale-green">
-            {% else %}
-              <tr class="w3-pale-red">
-            {% endif %}
-              <th>Total Due: ${{ b.total }}</th>
-              <th>Posted: {{ b.posted_date }}</th>
-              <th>Due: {{ b.due_date }}</th>
-            <th>
-              <form method="post">
-              <button class="w3-button w3-border w3-border-light-green w3-round-xxlarge" type="submit" name="paid" value="{{ b.bill_id }}">
-                Paid
-              </button>
-            </form>
-          </th>
+    {% if c.group_id == gr.group_id %}
+      <h2>{{ c.topic }}</h2>
+		  <table class="w3-table w3-bordered">
+			{% for b in bills %}
+				{% if b.topic == c.topic %}
+          {% if b.past_due == 0 %}
+					  <tr class="w3-pale-green">
+          {% else %}
+            <tr class="w3-pale-red">
+          {% endif %}
+          <th>Total Due: ${{ b.total }}</th>
+          <th>Posted: {{ b.posted_date }}</th>
+          <th>Due: {{ b.due_date }}</th>
+          <th><form method="post">
+            <button class="w3-button w3-border w3-border-light-green w3-round-xxlarge" type="submit" name="paid" value="{{ b.bill_id }}">
+              Paid
+            </button></form></th>
         </tr>
-					{% endif %}
-        </div>
-				{% endfor %}
+        {% endif %}
+		  {% endfor %}
       </table>
-    </div>
-    <a class="w3-small w3-text-blue" href="{{ url_for('user.addbill', top=c.topic, username=g.user['username']) }}">
+    <a class="w3-small w3-text-blue" href="{{ url_for('user.addbill', top=c.topic, username=g.user['username'], group_id=gr.group_id) }}">
       Add New Bill
     </a>
-  </div>
-  </article>
-  {% endfor %}
+    {% endif %}
+{% endfor %}
+</div>
+{% endfor %}
 {% endblock %}

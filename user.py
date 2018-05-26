@@ -13,9 +13,10 @@ bp = Blueprint('user', __name__)
 def home(username):
     db = get_db()
     date = datetime.date.today()
-    cat = db.execute('SELECT topic FROM topics WHERE id = ?', (g.user['id'],)).fetchall()
+    cat = db.execute('SELECT topic, group_id FROM topics WHERE id = ?', (g.user['id'],)).fetchall()
     bills = db.execute('SELECT total, posted_date, due_date, topic, bill_id, past_due FROM bills WHERE id = ? AND paid = 0', (g.user['id'],)).fetchall()
-    groups = db.execute('SELECT name FROM groups WHERE owner_id = ?', (g.user['id'],)).fetchall()
+    groups = db.execute('SELECT name, group_id FROM groups WHERE owner_id = ?', (g.user['id'],)).fetchall()
+
     if(request.method == 'POST'):
         del_id = request.form['paid']
         db.execute('UPDATE bills SET paid = 1 WHERE bill_id = ?', (del_id))
@@ -25,9 +26,9 @@ def home(username):
     return render_template('user/home.html', cat=cat, bills=bills, groups=groups, username=g.user['username'])
 
 #add topic
-@bp.route('/<username>/addtopic', methods=('GET', 'POST'))
+@bp.route('/<username>/addtopic/<group_id>', methods=('GET', 'POST'))
 @login_required
-def addtopic(username):
+def addtopic(username, group_id):
     if(request.method == 'POST'):
         db = get_db()
         error = None
@@ -36,31 +37,31 @@ def addtopic(username):
         if not category:
             error = "Please enter a new category"
 
-        if db.execute('SELECT topic FROM topics WHERE id = ? AND topic = ?', (g.user['id'], category,)).fetchone() is not None:
+        if db.execute('SELECT topic FROM topics WHERE id = ? AND group_id = ? AND topic = ?', (g.user['id'], group_id, category,)).fetchone() is not None:
             error = "Category already exists"
 
         if error is None:
-            db.execute( 'INSERT INTO topics (id, topic) VALUES (?, ?)', (g.user['id'], category))
+            db.execute( 'INSERT INTO topics (id, topic, group_id) VALUES (?, ?, ?)', (g.user['id'], category, group_id))
             db.commit()
             return redirect(url_for('.home', username = g.user['username']))
 
         flash(error)
 
-    return render_template('user/addtopic.html', username=g.user['username'])
+    return render_template('user/addtopic.html', username=g.user['username'], group_id=group_id)
 
 
 # add item
-@bp.route('/<username>/addbill/<top>', methods=('GET', 'POST'))
+@bp.route('/<username>/addbill/<top><group_id>', methods=('GET', 'POST'))
 @login_required
-def addbill(username,top):
-    if(request.method == 'POST'):
+def addbill(username, top, group_id):
+    if request.method == 'POST':
         db = get_db()
         error = None
         total = float(request.form['total'])
         due = request.form['due']
         posted = request.form['posted']
 
-        db.execute('INSERT INTO bills (id, topic, total, posted_date, due_date, paid, past_due) VALUES (?, ?, ?, ?, ?, 0, 0)', (g.user['id'], top, total, posted, due,))
+        db.execute('INSERT INTO bills (id, group_id, topic, total, posted_date, due_date, paid, past_due) VALUES (?, ?, ?, ?, ?, ?, 0, 0)', (g.user['id'], group_id, top, total, posted, due,))
         db.commit()
         return redirect(url_for('.home', username=g.user['username']))
 
@@ -70,13 +71,18 @@ def addbill(username,top):
 @bp.route('/<username>/addgroup', methods=('GET', 'POST'))
 @login_required
 def addgroup(username):
-    if(request.method == 'POST'):
+    if request.method == 'POST':
         db = get_db()
         error = None
         name = request.form['name']
+        if db.execute('SELECT name FROM groups WHERE owner_id = ? AND name = ?', (g.user['id'], name)).fetchone() is not None:
+            error = "Group Already Exists"
 
-        db.execute('INSERT INTO groups (owner_id, name) VALUES (?, ?)', (g.user['id'], name))
-        db.commit()
-        return redirect(url_for('.home', username=g.user['username']))
+        if error is None:
+            db.execute('INSERT INTO groups (owner_id, name) VALUES (?, ?)', (g.user['id'], name))
+            db.commit()
+            return redirect(url_for('.home', username=g.user['username']))
+
+        flash(error)
 
     return render_template('user/addgroup.html', username=g.user['username'])
