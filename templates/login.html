@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 
-{% block header %}
-<h2>{% block title %}Log In{% endblock %}</h2>
-{% endblock %}
+{% block title %}Log In{% endblock %}
+{% block header %}{% endblock %}
 
 {% block content %}
 <table class="w3-border w3-flat-concrete w3-center" style="margin: auto; width: 40%; padding: 10px;">
@@ -12,7 +11,7 @@
         <label for="username">Username: </label>
       </td>
       <td>
-        <input name="username" placeholder="Enter Username" id="username" required>
+        <input name="username" placeholder="Enter Username" id="username" required autofocus>
       </td>
       </tr>
     <tr>

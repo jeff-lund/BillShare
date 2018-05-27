@@ -2,6 +2,8 @@ DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS bills;
 DROP TABLE IF EXISTS topics;
 DROP TABLE IF EXISTS groups;
+DROP TABLE IF EXISTS group_members;
+DROP TABLE IF EXISTS messages;
 
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -36,4 +38,18 @@ CREATE TABLE groups (
   group_id INTEGER PRIMARY KEY AUTOINCREMENT,
   owner_id INTEGER NOT NULL,
   name TEXT NOT NULL
+);
+
+/* permission levels: 0-pending, 1-member, 2-owner */
+CREATE TABLE group_members (
+  group_id INTEGER NOT NULL,
+  member_id INTEGER NOT NULL,
+  permission INTEGER NOT NULL
+);
+
+CREATE TABLE messages (
+  sender_id INTEGER,
+  rec_id INTEGER,
+  mes TEXT,
+  viewed INTEGER
 );

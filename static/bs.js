@@ -5,6 +5,8 @@ function openGroup(groupName, elmnt) {
     for (i = 0; i < tabcontent.length; i++) {
         tabcontent[i].style.display = "none";
     }
+    tabc = document.getElementsByClassName("tabcontentdef");
+    tabc[0].style.display ="none";
 
     // Show the specific tab content
     document.getElementById(groupName).style.display = "block";

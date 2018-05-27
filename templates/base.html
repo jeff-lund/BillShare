@@ -3,30 +3,33 @@
 <link rel="stylesheet" type="text/css" href="/static/style.css">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-flat.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src= "/static/bs.js"></script>
 <title>
   {% block title %}{% endblock %} - BillShare
 </title>
 </head>
-    <div class="header">
-      <a class="" href="{{ url_for('index') }}">
-          <img class="logo" src="/static/bs_logo.png" alt="Billshare">
-        </a>
-      <div class="w3-right">
-        {% if g.user %}
-          {{ g.user['username'] }}
-          <a href="{{ url_for('auth.logout') }}">Log Out</a>
-        {% else %}
-          <a href="{{ url_for('auth.login') }}">Log In</a>
-        {% endif %}
-      </div>
-    </div>
-<section class="content">
-  <header>
-    {% block header %}{% endblock %}
-  </header>
-  {% for message in get_flashed_messages() %}
-    <div style="color:red;" class="flash">{{ message }}</div>
-  {% endfor %}
-  {% block content %}{% endblock %}
-</section>
+<div class="header">
+  <a class="" href="{{ url_for('index') }}">
+    <img class="logo" src="/static/bs_logo.png" alt="Billshare">
+  </a>
+  <div class="w3-right">
+    {% if g.user %}
+      {{ g.user['username'] }}
+      <a href="{{ url_for('auth.logout') }}">Log Out</a>
+    {% else %}
+      <a href="{{ url_for('auth.login') }}">Log In</a>
+    {% endif %}
+  </div>
+</div>
+<body>
+  <section class="content">
+    <header>
+      {% block header %}{% endblock %}
+    </header>
+    {% for message in get_flashed_messages() %}
+      <div style="color:red;" class="flash">{{ message }}</div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+  </section>
+</body>

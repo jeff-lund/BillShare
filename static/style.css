@@ -1,7 +1,10 @@
 .header {
-  border-bottom-style: ridge;
+  padding-bottom: 10px;
 }
 
+body {
+  background-color: Gainsboro;
+}
 .logo {
   max-width: 400px;
   max-height: 400px;
@@ -31,6 +34,41 @@
   padding: 20px;
   outline-style: outset;
   outline-color: DarkSlateGray;
-  max-width: 600px;
+  max-width: 800px;
   margin: auto;
+}
+
+.tabcontentdef {
+  padding: 20px;
+  outline-style: outset;
+  outline-color: DarkSlateGray;
+  max-width: 800px;
+  margin: auto;
+}
+
+.msg {
+  max-width: 800px;
+  margin: auto;
+  outline-style: outset;
+  outline-color: DarkSlateGray;
+  padding: 5px;
+}
+
+.msg_head {
+  border-top: solid;
+  border-bottom: solid;
+  border-width: 5px;
+  border-color: blue;
+}
+
+.msg_entry {
+  border-bottom: groove;
+
+}
+
+.check {
+  font-size:12px;
+  border: none;
+  color: Grey;
+  float: right;
 }

@@ -16,6 +16,7 @@ def home(username):
     cat = db.execute('SELECT topic, group_id FROM topics WHERE id = ?', (g.user['id'],)).fetchall()
     bills = db.execute('SELECT total, posted_date, due_date, topic, bill_id, past_due FROM bills WHERE id = ? AND paid = 0', (g.user['id'],)).fetchall()
     groups = db.execute('SELECT name, group_id FROM groups WHERE owner_id = ?', (g.user['id'],)).fetchall()
+    message = db.execute('SELECT mes FROM messages WHERE rec_id = ?', (g.user['id'],)).fetchall()
 
     if(request.method == 'POST'):
         del_id = request.form['paid']
@@ -23,7 +24,7 @@ def home(username):
         db.commit()
         return redirect(url_for('.home', username = g.user['username']))
 
-    return render_template('user/home.html', cat=cat, bills=bills, groups=groups, username=g.user['username'])
+    return render_template('user/home.html', cat=cat, bills=bills, groups=groups, username=g.user['username'], message=message)
 
 #add topic
 @bp.route('/<username>/addtopic/<group_id>', methods=('GET', 'POST'))
@@ -75,14 +76,55 @@ def addgroup(username):
         db = get_db()
         error = None
         name = request.form['name']
-        if db.execute('SELECT name FROM groups WHERE owner_id = ? AND name = ?', (g.user['id'], name)).fetchone() is not None:
+        if (db.execute('SELECT name FROM groups WHERE name = ?', (name,)).fetchone()) is not None:
             error = "Group Already Exists"
 
         if error is None:
-            db.execute('INSERT INTO groups (owner_id, name) VALUES (?, ?)', (g.user['id'], name))
+            db.execute('INSERT INTO groups (owner_id, name) VALUES (?, ?)', (g.user['id'], name,))
+            db.commit()
+            gid = db.execute('SELECT group_id FROM groups WHERE  name = ?', (name,)).fetchone()
+            db.execute('INSERT INTO group_members (group_id, member_id, permission) VALUES (?, ?, 2)', (g.user['id'], gid['group_id']))
             db.commit()
             return redirect(url_for('.home', username=g.user['username']))
 
         flash(error)
 
     return render_template('user/addgroup.html', username=g.user['username'])
+
+# Group Management
+@bp.route('/<username>/groupmanagement', methods=('GET', 'POST'))
+@login_required
+def groupmanagement(username):
+    db = get_db()
+    group_id = request.args['group_id']
+    gname = db.execute('SELECT name FROM groups WHERE group_id = ?', (group_id,)).fetchone()
+    if request.method == 'POST':
+        db = get_db()
+        error = None
+        if 'invite' in request.form:
+            invitee = db.execute('SELECT username, id FROM user WHERE username = ?', (request.form['invite'],)).fetchone()
+            if invitee is None:
+                error = "User does not exist"
+            elif db.execute('SELECT member_id FROM group_members WHERE member_id = ? AND group_id = ?', (invitee['id'], group_id,)).fetchone() is not None:
+                error = "User is already in the group"
+            else:
+                db.execute('INSERT INTO group_members (group_id, member_id, permission) VALUES (?, ?, 0)', (group_id, invitee['id']))
+                inv_msg = '{} has invited you to join {}.'.format(g.user['username'], gname['name'])
+                db.execute('INSERT INTO messages (sender_id, rec_id, mes, viewed) VALUES (?, ?, ?, 0)', (g.user['id'], invitee['id'], inv_msg,))
+                db.commit()
+                return redirect(url_for('.home', username=g.user['username']))
+
+        elif 'rename' in request.form:
+            if db.execute('SELECT * FROM groups WHERE name = ?', (request.form['rename'],)).fetchone() is not None:
+                error = 'Group Name Not Available'
+            else:
+                db.execute('UPDATE groups SET name = ? WHERE group_id = ?', (request.form['rename'], group_id,))
+                db.commit()
+                return redirect(url_for('.home', username=g.user['username']))
+
+        elif 'Delete' in request.form:
+            error = "Youre trying to delete this group uh oh"
+
+        flash(error)
+
+    return render_template('user/groupmanagement.html', username=g.user['username'], group_id=group_id, gname=gname['name'])

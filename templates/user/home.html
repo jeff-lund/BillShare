@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 
-{% block header %}
-<h2>{% block title %}Home{% endblock %} </h2>
-{% endblock %}
+<{% block title %}Home{% endblock %}
+{% block header %}{% endblock %}
 
 {% block content %}
 <div class="tab">
@@ -18,9 +17,22 @@
   </button>
 </div>
 
+{# Bills Portion #}
+
 {% for gr in groups %}
-<div id="{{ gr.name }}" class="tabcontent">
-  <a class="w3-small w3-text-blue" href="{{ url_for('user.addtopic', username=g.user['username'], group_id=gr.group_id) }}"> Add New Category To {{ gr.name }}</a>
+<div id="{{ gr.name }}" {% if gr.name == 'Default' %} class="tabcontentdef" {% else %} class="tabcontent" {% endif %}>
+  {% if gr.name != 'Default' %}
+    <a href="{{ url_for('user.groupmanagement', username=g.user['username'], group_id=gr.group_id) }}">
+      <h2> {{ gr.name }} </h2>
+    </a>
+  {% else %}
+    <h2> {{ gr.name }} </h2>
+  {% endif %}
+  <span>
+    <a class="w3-small w3-text-blue" href="{{ url_for('user.addtopic', username=g.user['username'], group_id=gr.group_id) }}">
+      Add New Category To {{ gr.name }}
+    </a>
+  </span>
   <br>
   {% for c in cat %}
     {% if c.group_id == gr.group_id %}
@@ -37,7 +49,7 @@
           <th>Posted: {{ b.posted_date }}</th>
           <th>Due: {{ b.due_date }}</th>
           <th><form method="post">
-            <button class="w3-button w3-border w3-border-light-green w3-round-xxlarge" type="submit" name="paid" value="{{ b.bill_id }}">
+            <button class="w3-btn w3-border w3-border-light-green w3-round-xxlarge" type="submit" name="paid" value="{{ b.bill_id }}">
               Paid
             </button></form></th>
         </tr>
@@ -51,4 +63,18 @@
 {% endfor %}
 </div>
 {% endfor %}
+<br>
+
+{# Message Center Portion #}
+<div class="msg">
+  <h3 class="msg_head">Message Center</h3>
+  {% for m in message %}
+    <div class=msg_entry>
+    <br>
+    {{ m.mes }}
+    <button class="check"> <i class="fa fa-check w3-green"></i></button>
+    <br>
+  </div>
+  {% endfor %}
+</div>
 {% endblock %}
