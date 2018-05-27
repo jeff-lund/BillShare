@@ -3,11 +3,13 @@
 {% block header %}
   {% block title %}
   Add Bill
-  {% endblock %}  
+  {% endblock %}
 {% endblock %}
 <p>
 <p>
 {% block content %}
+{% block sidebar %}{{ super() }}{% endblock %}
+<div class="body">
 <form method="post">
   <label for="total">Total Due</label>
   <input type="number" step=.01 name="total" id="total" required>
@@ -18,4 +20,5 @@
   <input type="submit" value="Submit">
 	<p>
   <a href="{{ url_for('user.home', username=g.user['username']) }}">Cancel</a>
+</div>
 {% endblock %}

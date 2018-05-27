@@ -1,13 +1,13 @@
 <!doctype html>
 <head>
-<link rel="stylesheet" type="text/css" href="/static/style.css">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-flat.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script src= "/static/bs.js"></script>
-<title>
-  {% block title %}{% endblock %} - BillShare
-</title>
+  <link rel="stylesheet" type="text/css" href="/static/style.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-flat.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src= "/static/bs.js"></script>
+  <title>
+    {% block title %}{% endblock %} - BillShare
+  </title>
 </head>
 <div class="header">
   <a class="" href="{{ url_for('index') }}">
@@ -22,14 +22,38 @@
     {% endif %}
   </div>
 </div>
-<body>
+
+
+{% block content %}
+  {% block sidebar %}
+    {% if g.user %}
+      <div class ="icon-bar">
+        {# HOME #}
+        <a class="active" href="{{ url_for('user.home', username=g.user['username']) }}">
+          <i class="fa fa-home"></i>
+        </a>
+        {# MESSAGES #}
+        <a href="{{ url_for('user.messages', username=g.user['username']) }}">
+          <i class="fa fa-envelope-o"></i>
+        </a>
+        {# GROUPS #}
+        <a href="{{ url_for('user.groupmanagement', username=g.user['username']) }}">
+          <i class="fa fa-group"></i>
+        </a>
+        {# LOGOUT #}
+        <a href="{{ url_for('auth.logout') }}">
+          <i class="fa fa-close"></i>
+        </a>
+      </div>
+    {% endif %}
+  {% endblock sidebar %}
   <section class="content">
     <header>
-      {% block header %}{% endblock %}
+      {% block header %}{% endblock header %}
     </header>
-    {% for message in get_flashed_messages() %}
-      <div style="color:red;" class="flash">{{ message }}</div>
-    {% endfor %}
-    {% block content %}{% endblock %}
-  </section>
-</body>
+{% endblock  content%}
+
+  {% for message in get_flashed_messages() %}
+  <div class="flash">{{ message }}</div>
+  {% endfor %}
+</section>

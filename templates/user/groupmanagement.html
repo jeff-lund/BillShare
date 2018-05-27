@@ -1,20 +1,60 @@
 {% extends 'base.html' %}
 
-<{% block title %}Group Management{% endblock %}
-{% block header %}<h1> Manage {{ gname }} </h1>{% endblock %}
+{% block title %}Group Management{% endblock %}
+{% block header %}<h1> Manage {{ group.name }} </h1>{% endblock %}
 
 {% block content %}
-  <form method='post'>
-    <label for="invite">Invite Member: </label>
-    <input type="text" name="invite" id="invite">
-    <input type="submit" value="Submit">
-  </form>
-  <form method='post'>
-    <label for="rename">Rename Group: </label>
-    <input type="text" name="rename" id="rename">
-    <input type="submit" value="Submit">
-  </form>
-  <form method='post'>
-    <input type="submit" class="w3-btn w3-round-xxlarge w3-red" name="Delete" value="Delete">
-  </form>
+  {% block sidebar %}{{ super() }}{% endblock %}
+  <div class="body">
+    {# Groups Panel #}
+    <div class="group_drop">
+      <span>Select Group</span>
+      <div class="group_drop_content">
+        {% for gr in group %}
+          <p class="gdc_element" onclick="openGroupPanel('{{ gr.name }}', this)">{{ gr.name }}</p>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="group">
+        {% for gr in group %}
+          <div class="group_content" id="{{ gr.name }}">
+            <h2> {{ gr.name }} </h2>
+          {# bill owner gets some options #}
+          {% if  gr.permission == 2 %}
+            <form method='post'>
+              <label for="invite">Invite Member: </label>
+              <input type="text" name="invite">
+              <button type="submit" name="gid" value="{{ gr.group_id }}">Submit</button>
+            </form>
+            <form method='post'>
+              <label for="rename">Rename Group: </label>
+              <input type="text" name="rename">
+              <button type="submit" name="gid" value="{{ gr.group_id }}">Submit</button>
+            </form>
+            <form method='post'>
+              <button type="submit" class="delbtn" name="delete" value="{{ gr.group_id }}">Delete Group</button>
+            </form>
+          {% else %}
+          <form method='post'>
+            <button type="submit" class="delbtn" name="leavegrp" value="{{ gr.group_id }}">
+              Leave group
+            </button>
+          </form>
+          {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+{# PENDING INVITES #}
+  <h4>Pending Invites</h4>
+  <div class="pending_panel">
+  {% for i in invites %}
+  <div class="pending_cont">
+    Group: {{ i.name }}
+    <form method='post' class="ad_icons">
+      <button type="submit" name="accept" value="{{ i.group_id }}" class="btn w3-green" ><i class="fa fa-check"></i></button>
+      <button type="submit" name="deny" value="{{ i.group_id }}" class="btn w3-red"><i class="fa fa-remove"></i></button>
+  </div>
+  {% endfor %}
+  </div>
+</div>
 {% endblock %}

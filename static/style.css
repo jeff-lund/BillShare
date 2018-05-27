@@ -2,16 +2,23 @@
   padding-bottom: 10px;
 }
 
-body {
-  background-color: Gainsboro;
-}
+ .body {
+   margin-left: 90px;
+ }
+
+ .flash {
+   color: Red;
+   margin-left: 90px;
+ }
+
 .logo {
   max-width: 400px;
   max-height: 400px;
 }
+
 .tab {
   overflow: hidden;
-  background-color: dimgrey;
+  background-color: CadetBlue;
   width: 100%;
 }
 .tablinks {
@@ -23,34 +30,27 @@ body {
   cursor: pointer;
   padding: 14px 16px;
   font-size: 17px;
+  display: block;
 }
 
 .tablinks:hover {
-  background-color: grey;
+  background-color: Aqua;
 }
 
 .tabcontent {
   display: none;
   padding: 20px;
-  outline-style: outset;
-  outline-color: DarkSlateGray;
+  border-style: outset;
+  border-color: DarkSlateGray;
   max-width: 800px;
   margin: auto;
-}
-
-.tabcontentdef {
-  padding: 20px;
-  outline-style: outset;
-  outline-color: DarkSlateGray;
-  max-width: 800px;
-  margin: auto;
+  margin-top: 20px;
 }
 
 .msg {
-  max-width: 800px;
-  margin: auto;
-  outline-style: outset;
-  outline-color: DarkSlateGray;
+  border-top: outset;
+  border-bottom: outset;
+  border-color: DarkSlateGray;
   padding: 5px;
 }
 
@@ -63,12 +63,136 @@ body {
 
 .msg_entry {
   border-bottom: groove;
-
 }
 
 .check {
   font-size:12px;
   border: none;
-  color: Grey;
+  background-color: White;;
   float: right;
+  display: block;
+}
+
+.member{
+  border-style: inset;
+  border-width: 4px;
+  padding: 5px;
+}
+
+.icon-bar {
+  width: 90px;
+  background-color: CadetBlue;
+  margin: 0;
+  padding: 0;
+  height: auto;
+  position: fixed;
+  overflow: auto;
+}
+.icon-bar a {
+  display: block;
+  text-align: center;
+  padding: 16px;
+  transition: all 0.3s ease;
+  color: white;
+  font-size: 36px;
+}
+
+.icon-bar a:hover {
+  background-color: Aqua;
+}
+
+.active {
+  background-color: #4CAF50;
+}
+
+.btn {
+  background-color: White;
+  cursor: pointer;
+  border: none;
+  display: inline-block;
+}
+
+.ad_icons {
+  display: inline-block;
+  float: right;
+}
+
+.delbtn {
+  border-style: none;
+  color: White;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  background-color: Red;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 4px 2px
+}
+
+.paidbtn {
+  border-style: none;
+  color: White;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  background-color: Green;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 4px 2px
+}
+
+.pending_panel {
+  border-style: outset;
+  border-color: CadetBlue;
+  padding: 10px;
+}
+
+.pending_cont {
+  border-bottom-style: dashed;
+  padding: 5px;
+}
+
+.group_drop {
+  position: relative;
+  display: inline-block;
+  background-color: CadetBlue;
+  color: White;
+  font-size: 16px;
+  text-align: center;
+  text-decoration: none;
+  padding: 5px;
+}
+
+.group_drop_content {
+  display: none;
+  position: absolute;
+  background-color: DarkSlateGray;
+  width: 140px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  cursor: pointer;
+}
+
+.gdc_element:hover {
+  background-color: Aqua;
+}
+
+.group_drop:hover .group_drop_content {
+  display: block;
+}
+
+.group {
+  border-style: outset;
+  border-color: CadetBlue;
+  min-height: 300px;
+  min-width: 300px;
+}
+
+.group_content {
+  display: none;
+}
+
+.smalllink {
+  color: DeepSkyBlue;
+  font-size: 12px;
 }

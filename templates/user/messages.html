@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Messages{% endblock %}
+{% block content %}
+{% block sidebar %} {{ super() }} {% endblock %}
+<div class='body'>
+  <div class="msg">
+    <h3 class="msg_head">Message Center</h3>
+    {% for m in messages %}
+      <div class=msg_entry>
+      <br>
+      {{ m.mes }}
+      <form method="post">
+        <button class="check" type="submit" name="seen" value="{{ m.mes_id }}"> <i class="fa fa-check w3-green"></i></button>
+      </form>
+      <br>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
