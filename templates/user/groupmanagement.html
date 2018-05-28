@@ -23,12 +23,12 @@
           {% if  gr.permission == 2 %}
             <form method='post'>
               <label for="invite">Invite Member: </label>
-              <input type="text" name="invite">
+              <input class="txt_field" type="text" name="invite">
               <button type="submit" name="gid" value="{{ gr.group_id }}">Submit</button>
             </form>
             <form method='post'>
               <label for="rename">Rename Group: </label>
-              <input type="text" name="rename">
+              <input class="txt_field" type="text" name="rename">
               <button type="submit" name="gid" value="{{ gr.group_id }}">Submit</button>
             </form>
             <form method='post'>

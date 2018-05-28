@@ -5,19 +5,18 @@ Index
 {% block header %}{% endblock %}
 
 {% block content %}
-<div class="w3-container w3-margin">
+<div class="intro">
 <center><h2>Welcome to BillShare</h2></center>
-probably write some more bullshit here
 </div>
-<div class="w3-container">
+<div>
   <nav>
     <center>
     <a href="{{ url_for('auth.register') }}">
-      <button class="w3-btn w3-round-xxlarge w3-green w3-hover-color-yellow">Register</button>
+      <button class="indxbtn">Register</button>
     </a>
     <p>
     <a href="{{ url_for('auth.login') }}">
-      <button class="w3-btn w3-round-xxlarge w3-green w3-hovor-color-yellow">Log In</button>
+      <button class="indxbtn">Log In</button>
     </a>
   </center>
   </nav>

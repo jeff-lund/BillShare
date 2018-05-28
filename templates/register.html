@@ -5,14 +5,14 @@
 {% endblock %}
 
 {% block content %}
-<table class="w3-border w3-flat-concrete w3-center" style="margin: auto; width: 40%; padding: 10px;">
+<table class="auth_tbl">
   <form method="post">
     <tr>
       <td>
         <label for="username">Username:</label>
       </td>
       <td>
-        <input name="username" placeholder="Enter Username" id="username" autofocus required>
+        <input class="txt_field" name="username" placeholder=" Enter Username" id="username" autofocus required>
       </td>
     </tr>
     <tr>
@@ -20,16 +20,18 @@
         <label for="password">Password:</label>
       </td>
     <td>
-      <input type="password" name="password" placeholder="Enter Password" id="password" required>
+      <input class="txt_field" type="password" name="password" placeholder=" Enter Password" id="password" required>
     </td>
   </tr>
   <tr>
-    <td rowspawn="2">
-      <button type="submit" value="register" class="w3-btn w3-round-xxlarge w3-white w3-border w3-border-green">
+    <td colspan="2" style="text-align:right;">
+      <button class="authbtn" type="submit" value="register">
         Register
       </button>
     </td>
   </tr>
   </form>
 </table>
+<br>
+<a class="smalllink" style="width:40%; margin:auto" href="{{ url_for('auth.login') }}"> Or Log In To Your Account </a>
 {% endblock %}

@@ -14,10 +14,17 @@ def home(username):
     db = get_db()
     error = None
     date = datetime.date.today()
-    cat = db.execute('SELECT topic, group_id FROM topics WHERE id = ?', (g.user['id'],)).fetchall()
-    bills = db.execute('SELECT total, posted_date, due_date, topic, bill_id, past_due FROM bills WHERE id = ? AND paid = 0', (g.user['id'],)).fetchall()
-    groups = db.execute('SELECT name, group_id FROM groups WHERE owner_id = ?', (g.user['id'],)).fetchall()
-    message = db.execute('SELECT * FROM messages WHERE rec_id = ? AND viewed = 0', (g.user['id'],)).fetchall()
+    groups = db.execute(
+        'SELECT * FROM groups \
+        JOIN group_members on groups.group_id = group_members.group_id  \
+        WHERE group_members.member_id = ?', (g.user['id'],)).fetchall()
+    cat = db.execute('SELECT * FROM topics \
+        JOIN group_members on topics.group_id=group_members.group_id \
+        WHERE group_members.member_id = ?', (g.user['id'],)).fetchall()
+    bills = db.execute(
+        'SELECT * FROM bills \
+        JOIN group_members on bills.group_id=group_members.group_id \
+        WHERE group_members.member_id = ? AND bills.paid = 0', (g.user['id'],)).fetchall()
 
     if request.method == 'POST':
         if 'paid' in request.form:
@@ -29,7 +36,7 @@ def home(username):
     if error is not None:
         flash(error)
 
-    return render_template('user/home.html', cat=cat, bills=bills, groups=groups, username=g.user['username'], message=message, date=date)
+    return render_template('user/home.html', cat=cat, bills=bills, groups=groups, username=g.user['username'])
 
 #add topic
 @bp.route('/<username>/addtopic/<group_id>', methods=('GET', 'POST'))
@@ -67,7 +74,7 @@ def addbill(username, top, group_id):
         due = request.form['due']
         posted = request.form['posted']
 
-        db.execute('INSERT INTO bills (id, group_id, topic, total, posted_date, due_date, paid, past_due) VALUES (?, ?, ?, ?, ?, ?, 0, 0)', (g.user['id'], group_id, top, total, posted, due,))
+        db.execute('INSERT INTO bills (owner_id, group_id, topic, total, posted_date, due_date, paid, past_due) VALUES (?, ?, ?, ?, ?, ?, 0, 0)', (g.user['id'], group_id, top, total, posted, due,))
         db.commit()
         return redirect(url_for('.home', username=g.user['username']))
 
@@ -110,8 +117,9 @@ def groupmanagement(username):
     group = db.execute(
         'SELECT * FROM groups \
         INNER JOIN group_members on groups.group_id = group_members.group_id \
-        WHERE group_members.member_id = ? AND group_members.permission > 0', \
-        (g.user['id'],)).fetchall()
+        WHERE group_members.member_id = ? AND group_members.permission > 0 \
+        AND groups.name != ?', \
+        (g.user['id'], 'Default',)).fetchall()
 
     if request.method == 'POST':
         error = None

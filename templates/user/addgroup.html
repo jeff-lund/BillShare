@@ -7,11 +7,12 @@ Add Group
 {% block content %}
 {% block sidebar %}{{ super() }}{% endblock %}
 <div class="body">
-<form method="post">
-  <label for="name">Group Name</label>
-  <input name="name" id="name" required>
-  <input type="submit" value="Submit">
- <p>
- <a href="{{ url_for('user.home', username=g.user['username']) }}">Cancel</a>
+  <div class="basic">
+    <form method="post" style="padding-top:30px;">
+      <label for="name">Group Name: </label>
+      <input class="txt_field" name="name" id="name" required>
+      <input class="basicbtn" type="submit" value="Submit">
+      <br>
+  </div>
 </div>
 {% endblock %}

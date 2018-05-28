@@ -22,16 +22,18 @@ CREATE TABLE topics (
 );
 
 CREATE TABLE bills (
-  id INTEGER NOT NULL,
+  owner_id INTEGER NOT NULL,
   bill_id INTEGER PRIMARY KEY AUTOINCREMENT,
   group_id INTEGER NOT NULL,
   topic TEXT NOT NULL,
   total REAL NOT NULL,
+  member_portion REAL,
+  owner_portion REAL,
   posted_date TEXT,
   due_date TEXT NOT NULL,
   paid INTEGER NOT NULL,
   past_due INTEGER NOT NULL,
-  FOREIGN KEY (id) REFERENCES user (id)
+  FOREIGN KEY (owner_id) REFERENCES user (id)
     ON DELETE CASCADE,
   FOREIGN KEY (topic) REFERENCES topics (topic)
     ON DELETE CASCADE,

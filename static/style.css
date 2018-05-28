@@ -16,6 +16,36 @@
   max-height: 400px;
 }
 
+.auth_tbl {
+  width: 40%;
+  margin: auto;
+  padding: 10px;
+  border: none;
+  background-color: MintCream;
+}
+
+.txt_field {
+  border-style: none;
+  border-bottom-style: solid;
+  border-bottom-color: Black;
+  border-bottom-width: 1px;
+  background-color: inherit;
+}
+
+.txt_field:focus {
+  outline: none;
+  background-color: inherit;
+}
+
+.basic {
+  padding: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  background-color: MintCream;
+  min-height: 120px;;
+  width: 70%;
+  margin: auto;
+  text-align: center;
+}
 .tab {
   overflow: hidden;
   background-color: CadetBlue;
@@ -51,14 +81,12 @@
   border-top: outset;
   border-bottom: outset;
   border-color: DarkSlateGray;
-  padding: 5px;
 }
 
 .msg_head {
-  border-top: solid;
   border-bottom: solid;
   border-width: 5px;
-  border-color: blue;
+  border-color: CadetBlue;
 }
 
 .msg_entry {
@@ -105,6 +133,7 @@
   background-color: #4CAF50;
 }
 
+/* *** buttons live here *** */
 .btn {
   background-color: White;
   cursor: pointer;
@@ -115,6 +144,38 @@
 .ad_icons {
   display: inline-block;
   float: right;
+}
+
+.indxbtn {
+  background-color: Green;
+  color: White;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  font-size: 24px;
+  width: 150px;
+  padding: 20px;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.indxbtn:hover {
+  background-color: DarkGreen;
+}
+.authbtn {
+  background-color: Green;
+  color: White;
+  border: none;
+  outline: none;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  width: 100px;
+  cursor: pointer;
+}
+
+.authbtn:hover {
+  background-color: DarkGreen;
 }
 
 .delbtn {

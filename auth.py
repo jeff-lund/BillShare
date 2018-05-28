@@ -34,6 +34,12 @@ def register():
                 'INSERT INTO groups (owner_id, name) VALUES (?, ?)',
                 (id['id'], 'Default',)
             )
+            gid = db.execute(
+                'SELECT group_id FROM groups \
+                WHERE owner_id = ? AND name = ?', \
+                (id['id'], 'Default',)).fetchone()
+            db.execute('INSERT INTO group_members (group_id, member_id, permission) \
+                VALUES (?, ?, 2)',  (gid['group_id'], id['id'],))
             db.commit()
             return redirect(url_for('auth.login'))
 
