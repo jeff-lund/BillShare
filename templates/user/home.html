@@ -39,7 +39,7 @@
             {% else %}
               <tr class="w3-pale-red">
             {% endif %}
-            <th>Total Due: ${{ b.total }}</th>
+            <th>Total Due: ${{ '%0.2f' | format(b.total|float) }}</th>
             <th>Posted: {{ b.posted_date }}</th>
             <th>Due: {{ b.due_date }}</th>
             <th><form method="post">

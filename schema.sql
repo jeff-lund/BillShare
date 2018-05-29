@@ -3,7 +3,11 @@ DROP TABLE IF EXISTS bills;
 DROP TABLE IF EXISTS topics;
 DROP TABLE IF EXISTS groups;
 DROP TABLE IF EXISTS group_members;
+DROP TABLE IF EXISTS topic_members;
+DROP TABLE IF EXISTS bill_members;
 DROP TABLE IF EXISTS messages;
+
+DROP TABLE IF EXISTS bill_share;
 
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -15,6 +19,7 @@ CREATE TABLE topics (
   id INTEGER,
   group_id INTEGER NOT NULL,
   topic TEXT NOT NULL,
+  default_enabled BOOLEAN,
   FOREIGN KEY (id) REFERENCES user (id)
     ON DELETE CASCADE,
   FOREIGN KEY (group_id) REFERENCES groups (group_id)
@@ -27,8 +32,6 @@ CREATE TABLE bills (
   group_id INTEGER NOT NULL,
   topic TEXT NOT NULL,
   total REAL NOT NULL,
-  member_portion REAL,
-  owner_portion REAL,
   posted_date TEXT,
   due_date TEXT NOT NULL,
   paid INTEGER NOT NULL,
@@ -54,14 +57,37 @@ CREATE TABLE group_members (
   group_id INTEGER NOT NULL,
   member_id INTEGER NOT NULL,
   permission INTEGER NOT NULL,
-  FOREIGN KEY (group_id) REFERENCES groups(group_id)
+  FOREIGN KEY (group_id) REFERENCES groups (group_id)
     ON DELETE CASCADE
 );
+
+CREATE TABLE topic_members (
+  topic_id INTEGER NOT NULL,
+  member_id INTEGER NOT NULL,
+  percentage INTEGER NOT NULL,
+  FOREIGN KEY (topic_id) REFERENCES topics (topic_id)
+    ON DELETE CASCADE,
+  FOREIGN KEY (member_id) REFERENCES user (id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE bill_members (
+  bill_id INTEGER NOT NULL,
+  member_id INTEGER NOT NULL,
+  member_sum INTEGER NOT NULL,
+  member_paid INTEGER NOT NULL,
+  FOREIGN KEY (bill_id) REFERENCES bills (bill_id)
+    ON DELETE CASCADE,
+  FOREIGN KEY (member_id) REFERENCES user (id)
+    ON DELETE CASCADE
+);
+
 
 CREATE TABLE messages (
   mes_id INTEGER PRIMARY KEY AUTOINCREMENT,
   sender_id INTEGER,
   rec_id INTEGER,
   mes TEXT,
-  viewed INTEGER
+  viewed INTEGER,
+  date_stamp DATE,
 );

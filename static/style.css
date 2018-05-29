@@ -46,6 +46,17 @@
   margin: auto;
   text-align: center;
 }
+
+.basicbill {
+  padding: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  background-color: MintCream;
+  min-height: 2000px;;
+  width: 70%;
+  margin: auto;
+  text-align: center;
+}
+
 .tab {
   overflow: hidden;
   background-color: CadetBlue;
