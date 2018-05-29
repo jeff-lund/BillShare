@@ -7,8 +7,6 @@ DROP TABLE IF EXISTS topic_members;
 DROP TABLE IF EXISTS bill_members;
 DROP TABLE IF EXISTS messages;
 
-DROP TABLE IF EXISTS bill_share;
-
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT UNIQUE NOT NULL,
@@ -89,5 +87,5 @@ CREATE TABLE messages (
   rec_id INTEGER,
   mes TEXT,
   viewed INTEGER,
-  date_stamp DATE,
+  date_stamp DATE
 );

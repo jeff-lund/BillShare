@@ -19,6 +19,10 @@
         {% for gr in group %}
           <div class="group_content" id="{{ gr.name }}">
             <h2> {{ gr.name }} </h2>
+			{# group members #}
+			<p> Group Members :
+			{{ gr.member_id }}
+			<p>
           {# bill owner gets some options #}
           {% if  gr.permission == 2 %}
             <form method='post'>
