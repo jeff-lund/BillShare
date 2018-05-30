@@ -6,16 +6,20 @@
 <div class='body'>
   <div class="msg">
     <h3 class="msg_head">Message Center</h3>
+    <table style="width:100%;">
     {% for m in messages %}
-      <div class=msg_entry>
-      <br>
-      {{ m.mes }}
-      <form method="post">
+      <tr class=msg_entry>
+      <th style="text-align:left;">
+        {{ m.mes }}
+      </th>
+      <th style="text-align:right;">
+        <form method="post">
         <button class="check" type="submit" name="seen" value="{{ m.mes_id }}"> <i class="fa fa-check w3-green"></i></button>
       </form>
-      <br>
-    </div>
+    </th>
+    </tr>
     {% endfor %}
+  </table>
   </div>
 </div>
 {% endblock %}

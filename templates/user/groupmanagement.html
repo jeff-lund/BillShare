@@ -20,25 +20,60 @@
           <div class="group_content" id="{{ gr.name }}">
             <h2> {{ gr.name }} </h2>
 			{# group members #}
-			<p> Group Members :
-			{{ gr.member_id }}
-			<p>
-          {# bill owner gets some options #}
+
+          {# group owner gets some options #}
           {% if  gr.permission == 2 %}
-            <form method='post'>
-              <label for="invite">Invite Member: </label>
-              <input class="txt_field" type="text" name="invite">
-              <button type="submit" name="gid" value="{{ gr.group_id }}">Submit</button>
+          <table>
+            <tr>
+              <form method='post'>
+                <th><label for="invite">Invite Member: </label></th>
+                <th><input class="txt_field" type="text" name="invite"></th>
+                <th><button class="defbtn" type="submit" name="gid" value="{{ gr.group_id }}">Submit</button></th>
+              </form>
+            </tr>
+            <tr>
+              <form method='post'>
+                <th><label for="rename">Rename Group: </label></th>
+                <th><input class="txt_field" type="text" name="rename"></th>
+                <th><button class="defbtn" type="submit" name="gid" value="{{ gr.group_id }}">Submit</button></th>
+              </form>
+            </tr>
+            <tr>
+              <form action="/removetopic" method="POST">
+                <th>Remove A Category: </th>
+                <th><select name="removetopic">
+                  {% for t in topics %}
+                    {% if t.group_id == gr.group_id %}
+                      <option name="topic_id" value="{{ t.topic_id }}">{{ t.topic }}</option>
+                    {% endif %}
+                  {% else %}
+                    <option>None</option>
+                  {% endfor %}
+                </select></th>
+              <th><button class="defbtn" type="submit" name="Submit">Submit</button></th>
+            </tr>
+            <tr style="text-align:left;">
+              <form method='post'>
+                <th colspan="3"><button type="submit" class="delbtn" name="delete" value="{{ gr.group_id }}">Delete Group</button></th>
             </form>
-            <form method='post'>
-              <label for="rename">Rename Group: </label>
-              <input class="txt_field" type="text" name="rename">
-              <button type="submit" name="gid" value="{{ gr.group_id }}">Submit</button>
-            </form>
-            <form method='post'>
-              <button type="submit" class="delbtn" name="delete" value="{{ gr.group_id }}">Delete Group</button>
-            </form>
+          </tr>
+        </table>
+        {#  group member #}
           {% else %}
+          <table>
+            <tr>
+              <form action="/removetopic" method="POST">
+                <th>Remove A Category: </th>
+                <th><select name="removetopic">
+                  {% for t in topics %}
+                    {% if t.group_id == gr.group_id and t.user_id == g.user['id'] %}
+                      <option value="{{ t.topic_id }}">{{ t.topic }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select></th>
+                <th><button class="defbtn" type="submit" name="Submit">Submit</button></th>
+              </tr>
+            </table>
           <form method='post'>
             <button type="submit" class="delbtn" name="leavegrp" value="{{ gr.group_id }}">
               Leave group
@@ -55,8 +90,9 @@
   <div class="pending_cont">
     Group: {{ i.name }}
     <form method='post' class="ad_icons">
-      <button type="submit" name="accept" value="{{ i.group_id }}" class="btn w3-green" ><i class="fa fa-check"></i></button>
-      <button type="submit" name="deny" value="{{ i.group_id }}" class="btn w3-red"><i class="fa fa-remove"></i></button>
+      <button type="submit" name="accept" value="{{ i.group_id }}" class="btn acpt" ><i class="fa fa-check"></i></button>
+      <button type="submit" name="deny" value="{{ i.group_id }}" class="btn deny"><i class="fa fa-remove"></i></button>
+    </form>
   </div>
   {% endfor %}
   </div>

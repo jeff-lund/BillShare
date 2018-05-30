@@ -17,7 +17,7 @@ def home(username):
     groups = db.execute(
         'SELECT * FROM groups \
         JOIN group_members on groups.group_id = group_members.group_id  \
-        WHERE group_members.member_id = ?', (g.user['id'],)).fetchall()
+        WHERE group_members.member_id = ? AND group_members.permission != 0', (g.user['id'],)).fetchall()
     cat = db.execute('SELECT * FROM topics \
         JOIN group_members on topics.group_id=group_members.group_id \
         WHERE group_members.member_id = ?', (g.user['id'],)).fetchall()
@@ -28,9 +28,14 @@ def home(username):
 
     if request.method == 'POST':
         if 'paid' in request.form:
-            del_id = request.form['paid']
-            db.execute('UPDATE bills SET paid = 1 WHERE bill_id = ?', (del_id))
+            db.execute('UPDATE bills SET paid = 1 WHERE bill_id = ?', (request.form['paid'],))
             db.commit()
+
+            return redirect(url_for('.home', username = g.user['username']))
+        if 'delete' in request.form:
+            db.execute('DELETE FROM bills WHERE bill_id = ?', (request.form['delete'],))
+            db.commit()
+
             return redirect(url_for('.home', username = g.user['username']))
 
     if error is not None:
@@ -39,46 +44,44 @@ def home(username):
     return render_template('user/home.html', cat=cat, bills=bills, groups=groups, username=g.user['username'])
 
 #add topic
-@bp.route('/<username>/addtopic/<group_id>', methods=('GET', 'POST'))
+@bp.route('/addtopic/<group_id>', methods=['POST'])
 @login_required
-def addtopic(username, group_id):
-    if request.method == 'POST':
-        db = get_db()
-        error = None
-        category = request.form['topic']
-
-        if not category:
-            error = "Please enter a new category"
-
-        if db.execute('SELECT topic FROM topics WHERE id = ? AND group_id = ? AND topic = ?', (g.user['id'], group_id, category,)).fetchone() is not None:
-            error = "Category already exists"
-
-        if error is None:
-            db.execute( 'INSERT INTO topics (id, topic, group_id) VALUES (?, ?, ?)', (g.user['id'], category, group_id))
-            db.commit()
-            return redirect(url_for('.home', username = g.user['username']))
-
+def addtopic(group_id):
+    db = get_db()
+    error = None
+    category = request.form['category']
+    if not category:
+        error = "Please enter a new category"
+    if db.execute(
+        'SELECT topic FROM topics WHERE user_id = ? \
+        AND group_id = ? AND topic = ?', \
+        (g.user['id'], group_id, category,)).fetchone() is not None:
+        error = "Category already exists"
+    if error is None:
+        db.execute(
+            'INSERT INTO topics (user_id, topic, group_id) \
+            VALUES (?, ?, ?)', (g.user['id'], category, group_id))
+        db.commit()
+    if error is not None:
         flash(error)
-
-    return render_template('user/addtopic.html', username=g.user['username'], group_id=group_id)
-
+    return redirect(url_for('.home', username = g.user['username']))
 
 # add item
-@bp.route('/<username>/addbill/<top><group_id>', methods=('GET', 'POST'))
+@bp.route('/addbill/<group_id>/<topic_id>', methods=['POST'])
 @login_required
-def addbill(username, top, group_id):
-    if request.method == 'POST':
-        db = get_db()
-        error = None
-        total = float(request.form['total'])
-        due = request.form['due']
-        posted = request.form['posted']
+def addbill(group_id, topic_id):
+    db = get_db()
+    error = None
+    total = float(request.form['total'])
+    due = request.form['due']
+    posted = request.form['posted']
 
-        db.execute('INSERT INTO bills (owner_id, group_id, topic, total, posted_date, due_date, paid, past_due) VALUES (?, ?, ?, ?, ?, ?, 0, 0)', (g.user['id'], group_id, top, total, posted, due,))
-        db.commit()
-        return redirect(url_for('.home', username=g.user['username']))
-
-    return render_template('user/addbill.html', username=g.user['username'])
+    db.execute('INSERT INTO bills \
+        (owner_id, group_id, topic_id, total, posted_date, due_date, paid, past_due) \
+        VALUES (?, ?, ?, ?, ?, ?, 0, 0)', \
+        (g.user['id'], group_id, topic_id, total, posted, due,))
+    db.commit()
+    return redirect(url_for('.home', username=g.user['username']))
 
 # add new group
 @bp.route('/<username>/addgroup', methods=('GET', 'POST'))
@@ -117,9 +120,14 @@ def groupmanagement(username):
     group = db.execute(
         'SELECT * FROM groups \
         INNER JOIN group_members on groups.group_id = group_members.group_id \
-        WHERE group_members.member_id = ? AND group_members.permission > 0 \
+        WHERE group_members.member_id = ? AND group_members.permission != 0 \
         AND groups.name != ?', \
         (g.user['id'], 'Default',)).fetchall()
+
+    topics = db.execute('SELECT * FROM topics \
+        INNER JOIN group_members on topics.group_id = group_members.group_id \
+        WHERE group_members.member_id = ?', \
+        (g.user['id'], )).fetchall()
 
     if request.method == 'POST':
         error = None
@@ -129,6 +137,7 @@ def groupmanagement(username):
                 WHERE member_id = ? AND group_id = ?', \
                 (g.user['id'], request.form['accept'],))
             db.commit()
+
             return redirect(url_for('.groupmanagement', username=g.user['username']))
         #deny invite request
         elif 'deny' in request.form:
@@ -137,6 +146,7 @@ def groupmanagement(username):
                 WHERE member_id = ? \
                 AND group_id = ?', (g.user['id'], request.form['deny']))
             db.commit()
+
             return redirect(url_for('.groupmanagement', username=g.user['username']))
 
         # Inviting a new member to a group
@@ -150,7 +160,7 @@ def groupmanagement(username):
                 'SELECT member_id FROM group_members \
                 WHERE member_id = ? AND group_id = ?', \
                 (invitee['id'], request.form['gid'],)).fetchone() is not None:
-                error = "User is already in the group"
+                error = "User is already in the group or has a pending invitation"
             else:
                 db.execute(
                     'INSERT INTO group_members (group_id, member_id, permission) VALUES (?, ?, 0)', \
@@ -164,7 +174,8 @@ def groupmanagement(username):
                     'INSERT INTO messages (sender_id, rec_id, mes, viewed) VALUES (?, ?, ?, 0)', \
                     (g.user['id'], invitee['id'], inv_msg,))
                 db.commit()
-                return redirect(url_for('.groupmanagement', username=g.user['username']))
+                error = "Group Invitation Sent"
+                #return redirect(url_for('.groupmanagement', username=g.user['username']))
         # Rename A Group
         elif 'rename' in request.form:
             if db.execute(
@@ -176,6 +187,7 @@ def groupmanagement(username):
                     'UPDATE groups SET name = ? WHERE group_id = ?', \
                     (request.form['rename'], request.form['gid'],))
                 db.commit()
+
                 return redirect(url_for('.groupmanagement', username=g.user['username']))
         # Delete a Group
         elif 'delete' in request.form:
@@ -184,6 +196,7 @@ def groupmanagement(username):
             # table owners bills should be deleted (?) or optional delete
             db.execute('DELETE FROM groups WHERE group_id = ?', (request.form['delete'],))
             db.commit()
+
             return redirect(url_for('.home', username=g.user['username']))
         # Level a Group as a member_id
         elif 'leavegrp' in request.form:
@@ -191,12 +204,25 @@ def groupmanagement(username):
                 'DELETE FROM group_members WHERE group_id = ? and member_id = ?', \
                 (request.form['leavegrp'], g.user['id']))
             db.commit()
+
             return redirect(url_for('.home', username=g.user['username']))
 
         if error is not None:
             flash(error)
 
-    return render_template('user/groupmanagement.html', username=g.user['username'], group=group, invites=invites)
+    return render_template('user/groupmanagement.html', username=g.user['username'], group=group, invites=invites, topics=topics)
+
+# Deleting A topic
+@bp.route('/removetopic', methods=['POST'])
+@login_required
+def removetopic():
+    db = get_db()
+    topic_id = request.form['removetopic']
+    # delete if owner move back to owner's default if not owner
+    db.execute('DELETE FROM topics WHERE topic_id = ?', (topic_id,))
+    db.commit()
+
+    return redirect(url_for('.home', username=g.user['username']))
 
 # Messages
 @bp.route('/<username>/messages', methods=('GET', 'POST'))

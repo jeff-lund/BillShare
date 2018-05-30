@@ -11,7 +11,6 @@ function openGroup(groupName, elmnt) {
 }
 
 function openGroupPanel(groupName, elmnt) {
-    // Hide all elements with class="tabcontent" by default */
     var i, group_content;
     group_content = document.getElementsByClassName("group_content");
     for (i = 0; i < group_content.length; i++) {
@@ -20,4 +19,13 @@ function openGroupPanel(groupName, elmnt) {
 
     // Show the specific tab content
     document.getElementById(groupName).style.display = "block";
+}
+
+function toggle(id, elmnt) {
+  var ele_id = document.getElementById(id);
+  if(ele_id.style.display == "inline-block") {
+    ele_id.style.display = "none";
+  } else {
+    ele_id.style.display = "inline-block";
+  }
 }

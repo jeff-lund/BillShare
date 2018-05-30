@@ -4,6 +4,7 @@
 
  .body {
    margin-left: 90px;
+   position: inherit;
  }
 
  .flash {
@@ -61,6 +62,7 @@
   overflow: hidden;
   background-color: CadetBlue;
   width: 100%;
+  margin-left: 90px;
 }
 .tablinks {
   background-color: inherit;
@@ -88,6 +90,10 @@
   margin-top: 20px;
 }
 
+.hometbl {
+  width: 100%;
+}
+
 .msg {
   border-top: outset;
   border-bottom: outset;
@@ -102,14 +108,14 @@
 
 .msg_entry {
   border-bottom: groove;
+  padding-left: 5px;
 }
 
 .check {
-  font-size:12px;
+  font-size: 30px;
   border: none;
-  background-color: White;;
-  float: right;
-  display: block;
+  background-color: inherit;
+  outline: none;
 }
 
 .member{
@@ -123,7 +129,7 @@
   background-color: CadetBlue;
   margin: 0;
   padding: 0;
-  height: auto;
+  height: 100%;
   position: fixed;
   overflow: auto;
 }
@@ -146,11 +152,14 @@
 
 /* *** buttons live here *** */
 .btn {
-  background-color: White;
+  color: White;
   cursor: pointer;
   border: none;
   display: inline-block;
 }
+
+.btn.deny { background-color: Red; }
+.btn.acpt { background-color:Green;}
 
 .ad_icons {
   display: inline-block;
@@ -189,6 +198,29 @@
   background-color: DarkGreen;
 }
 
+.defbtn {
+  background-color: CadetBlue;
+  color: White;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+}
+
+.defbtn:hover {
+  background-color: Blue;
+}
+
+.dltbtn {
+  background-color: inherit;
+  color: Red;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
 .delbtn {
   border-style: none;
   color: White;
@@ -222,8 +254,14 @@
 .pending_cont {
   border-bottom-style: dashed;
   padding: 5px;
+  display: block;
 }
 
+/***********************************************/
+/*                                             */
+/*             Group Management                */
+/*                                             */
+/***********************************************/
 .group_drop {
   position: relative;
   display: inline-block;
@@ -238,7 +276,7 @@
 .group_drop_content {
   display: none;
   position: absolute;
-  background-color: DarkSlateGray;
+  background-color: CadetBlue;
   width: 140px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
@@ -246,11 +284,11 @@
 }
 
 .gdc_element:hover {
-  background-color: Aqua;
+  background-color: Grey;
 }
 
 .group_drop:hover .group_drop_content {
-  display: block;
+  display: inline-block;
 }
 
 .group {
@@ -267,4 +305,8 @@
 .smalllink {
   color: DeepSkyBlue;
   font-size: 12px;
+}
+
+.hid {
+  display: none;
 }
