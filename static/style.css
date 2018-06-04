@@ -242,6 +242,11 @@
   margin: 4px 2px
 }
 
+.disabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+
 .pending_panel {
   border-style: outset;
   border-color: CadetBlue;
@@ -314,8 +319,7 @@
 }
 
 .getpaid {
-  width: 100px;
   color: White;
   text-align: center;
-  background-color: green;
+  background-color: CadetBlue;
 }

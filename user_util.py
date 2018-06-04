@@ -51,7 +51,13 @@ def get_member_list(groups):
 
     return members
 
-#def reset_bill_paid():
-#    db = get_db()
-#    db.execute("UPDATE bill_members SET member_paid=0")
-#    db.commit()
+def check_paid(bill_id):
+    db = get_db()
+    check = db.execute('SELECT member_paid FROM bill_members \
+        WHERE bill_id = ?', (bill_id,)).fetchall()
+    for entry in check:
+        if entry['member_paid'] == 0:
+            return
+    db.execute('UPDATE bills SET paid = 1 \
+        WHERE bill_id = ?', (bill_id,))
+    db.commit()

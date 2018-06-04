@@ -5,7 +5,7 @@ from billshare.auth import login_required
 from billshare.db import get_db
 import datetime
 import sqlite3
-from billshare.user_util import even_split, custom_split, reset_bills, get_member_list
+from billshare.user_util import even_split, custom_split, reset_bills, get_member_list, check_paid
 bp = Blueprint('user', __name__)
 
 # user home page
@@ -47,8 +47,10 @@ def home(username):
 
     if request.method == 'POST':
         if 'paid' in request.form:
-            db.execute('UPDATE bills SET paid = 1 WHERE bill_id = ?', (request.form['paid'],))
+            db.execute('UPDATE bill_members SET member_paid = 1 \
+            WHERE bill_id = ? AND member_id=?', (request.form['paid'], g.user['id'],))
             db.commit()
+            check_paid(request.form['paid'])
 
             return redirect(url_for('.home', username = g.user['username']))
         if 'delete' in request.form:

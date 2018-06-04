@@ -52,6 +52,7 @@
             <th>
                 {# group members drop down #}
                 <select class="getpaid">
+                  <option>Member Paid</option>
                   {% for user in members[gr.group_id] %}
                     {% if has_paid[gr.group_id][user][b.bill_id] == 0 %}
                       <option style="background-color: Red;">{{ user }}</option>
@@ -62,9 +63,15 @@
                 </select>
             </th>
             <th><form method="post">
-              <button class="paidbtn" type="submit" name="paid" value="{{ b.bill_id }}">
+              {% if b.member_paid %}
+              <button class="paidbtn disabled" type="submit" name="paid" value="{{ b.bill_id }}" disabled>
                 Paid
               </button>
+              {% else %}
+              <button class="paidbtn" type="submit" name="paid" value="{{ b.bill_id }}" >
+                Paid
+              </button>
+              {% endif %}
               {% if c.user_id == g.user.id %}
                 <button class="dltbtn" type="submit" name="delete" value="{{ b.bill_id }}">
                   <i class="fa fa-times-circle"></i>
