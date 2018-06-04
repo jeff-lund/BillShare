@@ -116,6 +116,7 @@
   border: none;
   background-color: inherit;
   outline: none;
+  cursor: pointer;
 }
 
 .member{
@@ -146,10 +147,6 @@
   background-color: Aqua;
 }
 
-.active {
-  background-color: #4CAF50;
-}
-
 /* *** buttons live here *** */
 .btn {
   color: White;
@@ -159,7 +156,7 @@
 }
 
 .btn.deny { background-color: Red; }
-.btn.acpt { background-color:Green;}
+.btn.acpt { background-color: Green;}
 
 .ad_icons {
   display: inline-block;
@@ -210,7 +207,7 @@
 }
 
 .defbtn:hover {
-  background-color: Blue;
+  background-color: Aqua;
 }
 
 .dltbtn {
@@ -249,6 +246,8 @@
   border-style: outset;
   border-color: CadetBlue;
   padding: 10px;
+  max-width: 60%;
+  margin: auto;
 }
 
 .pending_cont {
@@ -267,24 +266,21 @@
   display: inline-block;
   background-color: CadetBlue;
   color: White;
-  font-size: 16px;
-  text-align: center;
-  text-decoration: none;
-  padding: 5px;
+  font-size: 20px;
 }
 
 .group_drop_content {
   display: none;
   position: absolute;
   background-color: CadetBlue;
-  width: 140px;
+  min-width: 140px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
   cursor: pointer;
 }
 
 .gdc_element:hover {
-  background-color: Grey;
+  background-color: Aqua;
 }
 
 .group_drop:hover .group_drop_content {
@@ -296,6 +292,8 @@
   border-color: CadetBlue;
   min-height: 300px;
   min-width: 300px;
+  max-width: 70%;
+  margin: auto;
 }
 
 .group_content {
@@ -309,4 +307,15 @@
 
 .hid {
   display: none;
+}
+
+.left {
+  text-align: left;
+}
+
+.getpaid {
+  width: 100px;
+  color: White;
+  text-align: center;
+  background-color: green;
 }

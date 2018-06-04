@@ -20,10 +20,13 @@
   {% for gr in groups %}
   <div id="{{ gr.name }}" class="tabcontent" >
     <h2> {{ gr.name }} </h2>
+    <h5>Members: {{ members[gr.group_id]|join(', ')}}</h5>
       <div>
         <button class="defbtn" onclick="toggle('{{ gr.name }}category', this)">New Category</button>
         <form method="post" class="hid" id="{{ gr.name }}category" action="/addtopic/{{ gr.group_id}}">
           <input class="txt_field" type="text" name="category" required>
+          <input type="radio" name="split_type" value=1 checked>Even Split
+          <input type="radio" name="split_type" value=0 disabled>Custom Split
           <button class="defbtn" type="submit" name="Submit">Submit</button>
         </form>
       </div>
@@ -39,42 +42,63 @@
               <tr class="w3-pale-red">
             {% endif %}
             <th>Total Due: ${{ '%0.2f' | format(b.total|float) }}</th>
-            <th>Posted: {{ b.posted_date }}</th>
+            <th>My Portion: ${{ '%0.2f' | format(b.member_sum|float) }}</th>
+            {% if b.posted_date %}
+              <th>Posted: {{ b.posted_date }}</th>
+            {% else %}
+              <th>Posted:</th>
+            {% endif %}
             <th>Due: {{ b.due_date }}</th>
+            <th>
+                {# group members drop down #}
+                <select class="getpaid">
+                  {% for user in members[gr.group_id] %}
+                    {% if has_paid[gr.group_id][user][b.bill_id] == 0 %}
+                      <option style="background-color: Red;">{{ user }}</option>
+                    {% elif has_paid[gr.group_id][user][b.bill_id] == 1 %}
+                      <option style="background-color: Green;">{{ user }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+            </th>
             <th><form method="post">
               <button class="paidbtn" type="submit" name="paid" value="{{ b.bill_id }}">
                 Paid
               </button>
-              <button class="dltbtn" type="submit" name="delete" value="{{ b.bill_id }}">
-                <i class="fa fa-times-circle"></i>
-              </button>
+              {% if c.user_id == g.user.id %}
+                <button class="dltbtn" type="submit" name="delete" value="{{ b.bill_id }}">
+                  <i class="fa fa-times-circle"></i>
+                </button>
+              {% endif%}
             </form></th>
           </tr>
           {% endif %}
   		  {% endfor %}
-        </table>
+      </table>
+      {% if c.user_id == g.user.id %}
         <div>
-            <button class="defbtn" style="display:block;" onclick="toggle('{{ c.topic_id }}bill', this)">Add Bill</button>
-            <table class="hid" style="text-align:left;" id="{{ c.topic_id }}bill">
-              <form method="post" action="/addbill/{{ gr.group_id }}/{{ c.topic_id }}">
-                <tr>
-                  <th><label for="total">Total Due</label></th>
-                  <th><input class="txt_field" type="number" step=.01 name="total" id="total" placeholder="Total" required></th>
-                </tr>
-                <tr>
-                  <th><label for="posted">Date Posted</label></th>
-                  <th><input class="txt_field" type="date" name="posted" id="posted" placeholder="Date Posted"></th>
-                </tr>
-                <tr>
-                  <th><label for="due">Due Date</label></th>
-                  <th><input class="txt_field" type="date" name="due" id="due" placeholder="Due Date" required></th>
-                </tr>
-                <tr>
-                  <th colspan="2"><button class="defbtn" type="submit" name="Submit">Submit</button></th>
-                </tr>
-              </table>
-            </form>
+          <button class="defbtn" style="display:block;" onclick="toggle('{{ c.topic_id }}bill', this)">Add Bill</button>
+          <table class="hid" style="text-align:left;" id="{{ c.topic_id }}bill">
+            <form method="post" action="/addbill/{{ gr.group_id }}/{{ c.topic_id }}">
+              <tr>
+                <th><label for="total">Total Due</label></th>
+                <th><input class="txt_field" type="number" min=0 step=.01 name="total" id="total" placeholder="Total" required></th>
+              </tr>
+              <tr>
+                <th><label for="posted">Date Posted</label></th>
+                <th><input class="txt_field" type="date" name="posted" id="posted" placeholder="Date Posted"></th>
+              </tr>
+              <tr>
+                <th><label for="due">Due Date</label></th>
+                <th><input class="txt_field" type="date" name="due" id="due" placeholder="Due Date" required></th>
+              </tr>
+              <tr>
+                <th colspan="2"><button class="defbtn" type="submit" name="Submit">Submit</button></th>
+              </tr>
+            </table>
+          </form>
         </div>
+        {% endif %}
       {% endif %}
   {% endfor %}
   </div>

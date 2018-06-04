@@ -29,7 +29,7 @@
     {% if g.user %}
       <div class ="icon-bar">
         {# HOME #}
-        <a class="active" href="{{ url_for('user.home', username=g.user['username']) }}">
+        <a href="{{ url_for('user.home', username=g.user['username']) }}">
           <i class="fa fa-home"></i>
         </a>
         {# MESSAGES #}

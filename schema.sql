@@ -26,7 +26,7 @@ CREATE TABLE topics (
   user_id INTEGER,
   group_id INTEGER NOT NULL,
   topic TEXT NOT NULL,
-  default_enabled BOOLEAN,
+  default_enabled BOOLEAN NOT NULL,
   FOREIGN KEY (user_id) REFERENCES user (id)
     ON DELETE CASCADE,
   FOREIGN KEY (group_id) REFERENCES groups (group_id)
@@ -63,7 +63,7 @@ CREATE TABLE group_members (
 CREATE TABLE topic_members (
   topic_id INTEGER NOT NULL,
   member_id INTEGER NOT NULL,
-  percentage INTEGER NOT NULL,
+  percentage INTEGER,
   FOREIGN KEY (topic_id) REFERENCES topics (topic_id)
     ON DELETE CASCADE,
   FOREIGN KEY (member_id) REFERENCES user (id)
@@ -73,8 +73,8 @@ CREATE TABLE topic_members (
 CREATE TABLE bill_members (
   bill_id INTEGER NOT NULL,
   member_id INTEGER NOT NULL,
-  member_sum INTEGER NOT NULL,
-  member_paid BOOLEAN NOT NULL,
+  member_sum INTEGER,
+  member_paid BOOLEAN,
   FOREIGN KEY (bill_id) REFERENCES bills (bill_id)
     ON DELETE CASCADE,
   FOREIGN KEY (member_id) REFERENCES user (id)

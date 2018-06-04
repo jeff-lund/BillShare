@@ -8,10 +8,10 @@
   <div class="body">
     {# Groups Panel #}
     <div class="group_drop">
-      <span>Select Group</span>
+      Select Group
       <div class="group_drop_content">
         {% for gr in group %}
-          <p class="gdc_element" onclick="openGroupPanel('{{ gr.name }}', this)">{{ gr.name }}</p>
+          <div class="gdc_element" onclick="openGroupPanel('{{ gr.name }}', this)">{{ gr.name }}</div>
         {% endfor %}
       </div>
     </div>
@@ -19,59 +19,61 @@
         {% for gr in group %}
           <div class="group_content" id="{{ gr.name }}">
             <h2> {{ gr.name }} </h2>
+            <h5>Group Members: {{ members[gr['group_id']]|join(', ') }}</h5>
 			{# group members #}
-
           {# group owner gets some options #}
           {% if  gr.permission == 2 %}
           <table>
             <tr>
               <form method='post'>
-                <th><label for="invite">Invite Member: </label></th>
-                <th><input class="txt_field" type="text" name="invite"></th>
-                <th><button class="defbtn" type="submit" name="gid" value="{{ gr.group_id }}">Submit</button></th>
-              </form>
-            </tr>
-            <tr>
-              <form method='post'>
-                <th><label for="rename">Rename Group: </label></th>
-                <th><input class="txt_field" type="text" name="rename"></th>
-                <th><button class="defbtn" type="submit" name="gid" value="{{ gr.group_id }}">Submit</button></th>
-              </form>
-            </tr>
-            <tr>
-              <form action="/removetopic" method="POST">
-                <th>Remove A Category: </th>
-                <th><select name="removetopic">
-                  {% for t in topics %}
-                    {% if t.group_id == gr.group_id %}
-                      <option name="topic_id" value="{{ t.topic_id }}">{{ t.topic }}</option>
-                    {% endif %}
-                  {% else %}
-                    <option>None</option>
+                <th class="left">Remove A Category: </th>
+                <th class="left"><select name="removetopic">
+                  <option value="None">None</option>
+                  {% for t in topics if t.group_id == gr.group_id and t.user_id == g.user['id'] %}
+                    <option value="{{ t.topic_id }}">{{ t.topic }}</option>
                   {% endfor %}
                 </select></th>
-              <th><button class="defbtn" type="submit" name="Submit">Submit</button></th>
-            </tr>
-            <tr style="text-align:left;">
-              <form method='post'>
-                <th colspan="3"><button type="submit" class="delbtn" name="delete" value="{{ gr.group_id }}">Delete Group</button></th>
+              <th><button class="defbtn" type="submit">Submit</button></th>
             </form>
-          </tr>
-        </table>
+            </tr>
+            {% if gr.name != 'Default' %}
+              <tr>
+                <form method='post'>
+                  <th class="left"><label for="invite">Invite Member: </label></th>
+                  <th><input class="txt_field" type="text" name="invite"></th>
+                  <th><button class="defbtn" type="submit" name="gid" value="{{ gr.group_id }}">Submit</button></th>
+                </form>
+              </tr>
+              <tr>
+                <form method='post'>
+                  <th class="left"><label for="rename">Rename Group: </label></th>
+                  <th><input class="txt_field" type="text" name="rename"></th>
+                  <th><button class="defbtn" type="submit" name="gid" value="{{ gr.group_id }}">Submit</button></th>
+                </form>
+              </tr>
+              <tr class="left">
+                <form method='post'>
+                  <th colspan="3"><button type="submit" class="delbtn" name="delete" value="{{ gr.group_id }}">Delete Group</button></th>
+              </form>
+            </tr>
+          {% endif %}
+          </table>
         {#  group member #}
-          {% else %}
+          {% elif gr.permission == 1 %}
           <table>
             <tr>
-              <form action="/removetopic" method="POST">
-                <th>Remove A Category: </th>
-                <th><select name="removetopic">
-                  {% for t in topics %}
-                    {% if t.group_id == gr.group_id and t.user_id == g.user['id'] %}
+              <form method='post'>
+                <th class="left">Remove A Category: </th>
+                <th class="left">
+                  <select name="removetopic">
+                    <option value="None">None</option>
+                    {% for t in topics if t.group_id == gr.group_id and t.user_id == g.user['id'] %}
                       <option value="{{ t.topic_id }}">{{ t.topic }}</option>
-                    {% endif %}
-                  {% endfor %}
-                </select></th>
-                <th><button class="defbtn" type="submit" name="Submit">Submit</button></th>
+                      {% endfor %}
+                    </select>
+                  </th>
+                  <th><button class="defbtn" type="submit" name="removetopic">Submit</button></th>
+                </form>
               </tr>
             </table>
           <form method='post'>
@@ -83,17 +85,19 @@
         </div>
         {% endfor %}
     </div>
+    <br>
+    <br>
 {# PENDING INVITES #}
-  <h4>Pending Invites</h4>
   <div class="pending_panel">
-  {% for i in invites %}
-  <div class="pending_cont">
-    Group: {{ i.name }}
-    <form method='post' class="ad_icons">
-      <button type="submit" name="accept" value="{{ i.group_id }}" class="btn acpt" ><i class="fa fa-check"></i></button>
-      <button type="submit" name="deny" value="{{ i.group_id }}" class="btn deny"><i class="fa fa-remove"></i></button>
-    </form>
-  </div>
+    <h4>Pending Invites</h4>
+    {% for i in invites %}
+    <div class="pending_cont">
+      Group: {{ i.name }}
+      <form method='post' class="ad_icons">
+        <button type="submit" name="accept" value="{{ i.group_id }}" class="btn acpt" ><i class="fa fa-check"></i></button>
+        <button type="submit" name="deny" value="{{ i.group_id }}" class="btn deny"><i class="fa fa-remove"></i></button>
+      </form>
+    </div>
   {% endfor %}
   </div>
 </div>

@@ -18,7 +18,7 @@ function openGroupPanel(groupName, elmnt) {
     }
 
     // Show the specific tab content
-    document.getElementById(groupName).style.display = "block";
+    document.getElementById(groupName).style.display = "inline";
 }
 
 function toggle(id, elmnt) {
