@@ -1,5 +1,7 @@
-import sqlite3
+# !usr/bin/python3
+# Copyright (c) 2018 Jeff Lund
 
+import sqlite3
 import click
 from flask import current_app, g
 from flask.cli import with_appcontext

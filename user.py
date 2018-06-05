@@ -1,4 +1,6 @@
-#imports
+# !usr/bin/python3
+# Copyright (c) 2018 Jeff Lund
+
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for
 from werkzeug.exceptions import abort
 from billshare.auth import login_required

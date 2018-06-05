@@ -1,3 +1,6 @@
+# !usr/bin/python3
+# Copyright (c) 2018 Jeff Lund
+
 from billshare.db import get_db
 
 def reset_bills(group_id):

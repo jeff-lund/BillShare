@@ -1,3 +1,6 @@
+# !usr/bin/python3
+# Copyright (c) 2018 Jeff Lund
+
 import functools
 from flask import Blueprint, g, request, session, render_template, url_for, redirect, flash
 from werkzeug.security import generate_password_hash, check_password_hash
