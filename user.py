@@ -106,7 +106,7 @@ def addbill(group_id, topic_id):
         (owner_id, group_id, topic_id, total, posted_date, due_date, paid, past_due) \
         VALUES (?, ?, ?, ?, ?, ?, 0, 0)', \
         (g.user['id'], group_id, topic_id, total, posted, due,)).lastrowid
-
+    db.commit()
 
     #initialze bill_members
     members = db.execute(
@@ -248,9 +248,6 @@ def groupmanagement(username):
                 return redirect(url_for('.groupmanagement', username=g.user['username']))
         # Delete a Group
         elif 'delete' in request.form:
-            # should make a delete utility function
-            # any bills will be moved back to owners default groups
-            # table owners bills should be deleted (?) or optional delete
             db.execute('DELETE FROM groups WHERE group_id = ?', (request.form['delete'],))
             db.commit()
 

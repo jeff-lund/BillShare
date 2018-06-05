@@ -81,7 +81,6 @@ CREATE TABLE bill_members (
     ON DELETE CASCADE
 );
 
-
 CREATE TABLE messages (
   mes_id INTEGER PRIMARY KEY AUTOINCREMENT,
   sender_id INTEGER,
